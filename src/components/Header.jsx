@@ -1,5 +1,5 @@
 import React from 'react';
-import { BadgeCheck, Grid, Layers, Building2 } from 'lucide-react';
+import { BadgeCheck, Grid, Layers, Building2, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -11,9 +11,11 @@ export default function Header({
   setActiveSide,
   companyTemplate,
   setCompanyTemplate,
+  theme = 'dark',
+  toggleTheme,
 }) {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+    <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4 flex-wrap">
         {/* Brand Header */}
         <div className="flex items-center gap-3">
@@ -66,8 +68,9 @@ export default function Header({
           </Button>
         </div>
 
-        {/* Side Switcher (Front/Back) & Grid Toggle */}
+        {/* Side Switcher, Grid Toggle & Theme Switcher */}
         <div className="flex items-center gap-2">
+          {/* Tampak Depan / Belakang */}
           <div className="flex items-center bg-muted/70 p-1 rounded-lg border border-border">
             <Button
               type="button"
@@ -76,7 +79,9 @@ export default function Header({
               onClick={() => setActiveSide('front')}
               className={cn(
                 'h-7 text-xs gap-1.5 px-3',
-                activeSide === 'front' ? 'bg-background shadow text-foreground font-semibold' : 'text-muted-foreground'
+                activeSide === 'front'
+                  ? 'bg-background shadow text-foreground font-semibold'
+                  : 'text-muted-foreground hover:text-foreground'
               )}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -90,7 +95,9 @@ export default function Header({
               onClick={() => setActiveSide('back')}
               className={cn(
                 'h-7 text-xs gap-1.5 px-3',
-                activeSide === 'back' ? 'bg-background shadow text-foreground font-semibold' : 'text-muted-foreground'
+                activeSide === 'back'
+                  ? 'bg-background shadow text-foreground font-semibold'
+                  : 'text-muted-foreground hover:text-foreground'
               )}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -98,19 +105,38 @@ export default function Header({
             </Button>
           </div>
 
+          {/* Grid Toggle */}
           <Button
             type="button"
             variant={isGridVisible ? 'outline' : 'ghost'}
             size="sm"
             onClick={toggleGrid}
             className={cn(
-              'h-9 text-xs gap-1.5 border-border',
-              isGridVisible ? 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10' : 'text-muted-foreground'
+              'h-8 text-xs gap-1.5 border-border',
+              isGridVisible
+                ? 'text-cyan-600 dark:text-cyan-400 border-cyan-500/30 bg-cyan-500/10'
+                : 'text-muted-foreground hover:text-foreground'
             )}
             title="Nyalakan/Matikan Panduan Garis Grid"
           >
-            <Grid className="w-4 h-4" />
+            <Grid className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Grid: {isGridVisible ? 'ON' : 'OFF'}</span>
+          </Button>
+
+          {/* Theme Toggle (Light / Dark Mode) */}
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onClick={toggleTheme}
+            className="h-8 w-8 border-border text-foreground hover:bg-secondary transition-all"
+            title={theme === 'dark' ? 'Beralih ke Mode Terang (Light Mode)' : 'Beralih ke Mode Gelap (Dark Mode)'}
+          >
+            {theme === 'dark' ? (
+              <Sun className="w-4 h-4 text-amber-400 animate-in spin-in-90 duration-300" />
+            ) : (
+              <Moon className="w-4 h-4 text-slate-700 animate-in spin-in-90 duration-300" />
+            )}
           </Button>
         </div>
       </div>

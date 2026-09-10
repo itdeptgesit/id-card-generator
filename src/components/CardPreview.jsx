@@ -1,5 +1,8 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { Eye, Move } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 export default function CardPreview({
   cardRef,
@@ -95,16 +98,18 @@ export default function CardPreview({
   };
 
   return (
-    <div className="preview-container">
+    <Card className="p-4 border-border/80 bg-card/95 shadow-md flex flex-col items-center w-full max-w-[420px]">
       {/* Header Info */}
-      <div className="preview-meta">
+      <div className="w-full flex items-center justify-between pb-3 border-b border-border/70 mb-4">
         <div className="flex items-center gap-2">
-          <Eye className="w-4 h-4 text-cyan-400" />
-          <span className="preview-label">
+          <Eye className="w-4 h-4 text-cyan-500" />
+          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
             Preview Kartu ({activeSide === 'front' ? 'Tampak Depan' : 'Tampak Belakang'})
           </span>
         </div>
-        <span className="badge-cr80">Standar CR80 (54 x 85.6 mm)</span>
+        <Badge variant="outline" className="font-mono text-[10px] text-muted-foreground border-border">
+          CR80 (54 x 85.6 mm)
+        </Badge>
       </div>
 
       {/* Frame Kartu (Aspect Ratio CR80 ~ 340px x 538.5px) */}
@@ -297,14 +302,14 @@ export default function CardPreview({
       </div>
 
       {/* Interactive Drag & Gesture Hint */}
-      <div className="interactive-hint">
-        <Move className="w-3.5 h-3.5 text-cyan-400" />
+      <div className="flex items-center justify-center gap-2 mt-4 px-3 py-2 rounded-lg bg-secondary/50 border border-border text-xs text-muted-foreground text-center w-full max-w-[340px]">
+        <Move className="w-3.5 h-3.5 text-cyan-500 shrink-0" />
         <span>
           {activeSide === 'front'
             ? 'Seret foto langsung dengan mouse / layar sentuh. Scroll roda mouse untuk zoom.'
-            : 'Tampak belakang resmi: Gesit Natural Resources (Vision, Mission, Values, & Perhatian).'}
+            : 'Tampak belakang resmi: Vision, Mission, Values, & Perhatian.'}
         </span>
       </div>
-    </div>
+    </Card>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Header from './components/Header';
 import CardPreview from './components/CardPreview';
 import FormControls from './components/FormControls';
@@ -14,6 +14,27 @@ const DEFAULT_PHOTO = '/assets/default_model.png';
 export default function App() {
   const frontCardRef = useRef(null);
   const backCardRef = useRef(null);
+
+  // Tema Aplikasi (Light / Dark Mode)
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('idcard_theme') || 'dark';
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+      root.classList.remove('light');
+    } else {
+      root.classList.remove('dark');
+      root.classList.add('light');
+    }
+    localStorage.setItem('idcard_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   const [activeSide, setActiveSide] = useState('front'); // 'front' | 'back'
   const [isGridVisible, setIsGridVisible] = useState(true);
@@ -108,6 +129,8 @@ export default function App() {
         setActiveSide={setActiveSide}
         companyTemplate={companyTemplate}
         setCompanyTemplate={setCompanyTemplate}
+        theme={theme}
+        toggleTheme={toggleTheme}
       />
 
       {/* Main Grid Layout */}
