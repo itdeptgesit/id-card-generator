@@ -682,16 +682,17 @@ body {
   position: relative;
   width: 340px;
   height: 538.5px;
-  display: flex;
-  justify-content: center;
   margin: 0 auto;
+  overflow: hidden;
 }
 
 /* Standard CR80 Dimensions: 54mm x 85.6mm (Ratio ~ 1 : 1.585) -> 340px x 538.5px */
 .id-card-frame {
   width: 340px;
   height: 538.5px;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   overflow: hidden;
   border-radius: 0 !important;
   box-shadow: var(--shadow-frame);
@@ -883,16 +884,9 @@ body {
   text-align: center;
   box-sizing: border-box;
   padding: 0 !important;
-}
-
-.id-card-frame.card-back-white.is-active-back {
   display: flex !important;
   flex-direction: column !important;
   justify-content: space-between !important;
-}
-
-.id-card-frame.hidden {
-  display: none !important;
 }
 
 /* SISI ATAS: ~51% TINGGI KARTU (275px) */

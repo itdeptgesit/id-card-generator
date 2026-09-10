@@ -3,12 +3,25 @@ import { jsPDF } from 'jspdf';
 
 // Helper function to capture HTML element to sharp Canvas
 export async function captureElementToCanvas(element, scale = 3.5) {
+  if (!element) return null;
+
   // Sembunyikan garis grid sementara jika ada
   const gridEl = element.querySelector('.layer-grid');
-  const originalDisplay = gridEl ? gridEl.style.display : null;
+  const originalGridDisplay = gridEl ? gridEl.style.display : null;
   if (gridEl) gridEl.style.display = 'none';
 
-  const originalRadius = element.style.borderRadius;
+  // Simpan properti gaya awal
+  const prevStyle = {
+    opacity: element.style.opacity,
+    visibility: element.style.visibility,
+    transition: element.style.transition,
+    borderRadius: element.style.borderRadius,
+  };
+
+  // Pastikan elemen ber-opacity 1 dan terlihat saat proses capture html2canvas
+  element.style.transition = 'none';
+  element.style.visibility = 'visible';
+  element.style.opacity = '1';
   element.style.borderRadius = '0px';
 
   try {
@@ -16,18 +29,28 @@ export async function captureElementToCanvas(element, scale = 3.5) {
       scale: scale,
       useCORS: true,
       allowTaint: true,
-      backgroundColor: null,
+      backgroundColor: '#ffffff',
       logging: false,
+      windowWidth: element.offsetWidth || 340,
+      windowHeight: element.offsetHeight || 539,
     });
     return canvas;
+  } catch (err) {
+    console.error('Gagal saat capture element to canvas:', err);
+    throw err;
   } finally {
-    element.style.borderRadius = originalRadius;
-    if (gridEl) gridEl.style.display = originalDisplay || '';
+    // Kembalikan gaya awal
+    element.style.opacity = prevStyle.opacity;
+    element.style.visibility = prevStyle.visibility;
+    element.style.transition = prevStyle.transition;
+    element.style.borderRadius = prevStyle.borderRadius;
+    if (gridEl) gridEl.style.display = originalGridDisplay || '';
   }
 }
 
 // Helper: Rotasi canvas 90 derajat searah jarum jam untuk slot landscape A4
 export function rotateCanvas90Deg(canvas) {
+  if (!canvas || !canvas.width || !canvas.height) return canvas;
   const rotCanvas = document.createElement('canvas');
   rotCanvas.width = canvas.height;
   rotCanvas.height = canvas.width;

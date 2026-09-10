@@ -51,15 +51,22 @@ export default function BatchPrintManager({
     try {
       // Tangkap gambar tampak depan saat ini
       const fCanvas = await captureElementToCanvas(frontRef.current, 3.5);
+      if (!fCanvas) throw new Error('Gagal merender kanvas tampak depan');
       const rFrontCanvas = rotateCanvas90Deg(fCanvas);
       const frontImgData = rFrontCanvas.toDataURL('image/png', 1.0);
 
       // Tangkap gambar tampak belakang
       let backImgData = null;
       if (backRef.current) {
-        const bCanvas = await captureElementToCanvas(backRef.current, 3.5);
-        const rBackCanvas = rotateCanvas90Deg(bCanvas);
-        backImgData = rBackCanvas.toDataURL('image/png', 1.0);
+        try {
+          const bCanvas = await captureElementToCanvas(backRef.current, 3.5);
+          if (bCanvas) {
+            const rBackCanvas = rotateCanvas90Deg(bCanvas);
+            backImgData = rBackCanvas.toDataURL('image/png', 1.0);
+          }
+        } catch (backErr) {
+          console.warn('Gagal merender tampak belakang, kartu tetap disimpan:', backErr);
+        }
       }
 
       const newCardItem = {
@@ -72,13 +79,15 @@ export default function BatchPrintManager({
       };
 
       setBatchList((prev) => [...prev, newCardItem]);
-      showToast(`Kartu "${newCardItem.name}" tersimpan ke Slot #${batchList.length + 1}! Form siap untuk kartu berikutnya.`);
+      showToast(`Kartu "${newCardItem.name}" tersimpan ke Slot #${batchList.length + 1}!`);
 
-      // Reset form untuk membuat kartu berikutnya
-      onResetForNextCard();
+      // Reset form untuk membuat kartu berikutnya jika fungsi tersedia
+      if (typeof onResetForNextCard === 'function') {
+        onResetForNextCard();
+      }
     } catch (err) {
       console.error('Gagal menyimpan kartu ke antrean:', err);
-      alert('Terjadi kesalahan saat menyimpan kartu.');
+      alert(`Terjadi kesalahan saat menyimpan kartu: ${err.message || 'Periksa foto atau koneksi kanvas.'}`);
     } finally {
       setIsCapturing(false);
     }

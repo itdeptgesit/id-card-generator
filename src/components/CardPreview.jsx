@@ -113,12 +113,15 @@ export default function CardPreview({
       </div>
 
       {/* Frame Kartu (Aspect Ratio CR80 ~ 340px x 538.5px) */}
-      <div className="card-stage-wrapper">
+      <div className="card-stage-wrapper relative w-[340px] h-[538.5px] mx-auto overflow-hidden">
         {/* ================= TAMPAK DEPAN ================= */}
         <div
           ref={cardRef}
           id="idCardCanvasFront"
-          className={`id-card-frame ${activeSide === 'front' ? 'block' : 'hidden'}`}
+          className={cn(
+            "id-card-frame absolute inset-0 transition-opacity duration-200",
+            activeSide === 'front' ? "opacity-100 z-10 pointer-events-auto" : "opacity-0 z-0 pointer-events-none"
+          )}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
@@ -198,7 +201,10 @@ export default function CardPreview({
         <div
           ref={backCardRef}
           id="idCardCanvasBack"
-          className={`id-card-frame card-back-white ${activeSide === 'back' ? 'is-active-back' : 'hidden'}`}
+          className={cn(
+            "id-card-frame card-back-white absolute inset-0 transition-opacity duration-200",
+            activeSide === 'back' ? "opacity-100 z-10 pointer-events-auto" : "opacity-0 z-0 pointer-events-none"
+          )}
         >
           {/* Bagian Atas: Header + Statements (Mengisi ~51% Kartu) */}
           <div className="gnr-top-half">
