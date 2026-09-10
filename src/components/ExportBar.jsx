@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Download, FileText, Printer, FileSpreadsheet, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { exportCardPng, exportSingleCardPdf, exportA4SheetPdf } from '../utils/exportPdf';
 
 export default function ExportBar({
@@ -74,62 +76,67 @@ export default function ExportBar({
   };
 
   return (
-    <div className="export-panel">
+    <div className="max-w-7xl mx-auto px-4 mt-6">
+      {/* Loading overlay */}
       {isExporting && (
-        <div className="export-loader-overlay">
-          <Loader2 className="w-5 h-5 spin-icon text-amber-500" />
+        <div className="mb-3 flex items-center gap-3 px-4 py-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-semibold">
+          <Loader2 className="w-5 h-5 animate-spin" />
           <span>{exportLabel}</span>
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
         {/* Download PNG HD */}
-        <button
+        <Button
           type="button"
+          variant="amber"
           onClick={handleExportPng}
           disabled={isExporting}
-          className="btn-primary"
+          className="gap-2 text-xs h-10"
           title="Unduh gambar PNG resolusi tinggi (300 DPI)"
         >
           <Download className="w-4 h-4" />
           <span>Download PNG HD</span>
-        </button>
+        </Button>
 
         {/* Export PDF CR80 */}
-        <button
+        <Button
           type="button"
+          variant="outline"
           onClick={handleExportSinglePdf}
           disabled={isExporting}
-          className="btn-secondary"
+          className="gap-2 text-xs h-10 border-border hover:border-cyan-500/40"
           title="Export format PDF ukuran kartu CR80 (54 x 85.6 mm)"
         >
           <FileText className="w-4 h-4 text-cyan-400" />
           <span>PDF Kartu CR80</span>
-        </button>
+        </Button>
 
         {/* Export PDF Lembar A4 */}
-        <button
+        <Button
           type="button"
+          variant="outline"
           onClick={handleExportA4Sheet}
           disabled={isExporting}
-          className="btn-secondary"
+          className="gap-2 text-xs h-10 border-border hover:border-amber-500/40"
           title="Export lembar cetak A4 berisi kartu Depan & Belakang dengan garis potong"
         >
           <FileSpreadsheet className="w-4 h-4 text-amber-400" />
           <span>PDF Cetak Lembar A4</span>
-        </button>
+        </Button>
 
         {/* Cetak Langsung */}
-        <button
+        <Button
           type="button"
+          variant="outline"
           onClick={handleBrowserPrint}
           disabled={isExporting}
-          className="btn-secondary"
+          className="gap-2 text-xs h-10 border-border hover:border-emerald-500/40"
           title="Cetak langsung menggunakan dialog printer peramban"
         >
           <Printer className="w-4 h-4 text-emerald-400" />
           <span>Cetak Printer</span>
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { Eraser, RotateCcw, Undo2, Check, X } from 'lucide-react';
+import React, { useRef, useEffect, useState } from 'react';
+import { Eraser, RotateCcw, Undo2, Check, X, Sliders } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 export default function EraserModal({
   isOpen,
@@ -158,123 +160,148 @@ export default function EraserModal({
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in">
+      <div className="w-full max-w-xl bg-card border border-border/80 rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Modal Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-          <div className="flex items-center gap-2">
-            <Eraser className="w-5 h-5 text-amber-400" />
-            <h3 className="font-bold text-white text-base">Sikat Manual (Hapus & Pulihkan)</h3>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-card/50">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center">
+              <Eraser className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-foreground text-sm">Sikat Manual (Hapus & Pulihkan)</h3>
+              <p className="text-xs text-muted-foreground">Sentuh atau usap kursor pada kanvas untuk mengedit</p>
+            </div>
           </div>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+            className="h-8 w-8 text-muted-foreground hover:text-foreground"
           >
-            <X className="w-5 h-5" />
-          </button>
+            <X className="w-4 h-4" />
+          </Button>
         </div>
 
-        {/* Instructions */}
-        <p className="text-xs text-slate-400 mt-2 text-left">
-          Pilih <strong>Mode Hapus</strong> untuk membersihkan sisa background, atau <strong>Mode Pulihkan</strong> untuk mengembalikan bagian baju/rambut yang terpotong. Sentuh/geser kursor pada kanvas.
-        </p>
+        {/* Modal Body */}
+        <div className="p-6 overflow-y-auto flex flex-col gap-4">
+          {/* Mode Buttons & Undo */}
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 p-1 bg-secondary/40 rounded-lg border border-border/50">
+              <Button
+                type="button"
+                size="sm"
+                variant={brushMode === 'erase' ? 'default' : 'ghost'}
+                onClick={() => setBrushMode('erase')}
+                className={cn(
+                  "gap-1.5 text-xs h-8",
+                  brushMode === 'erase' && "bg-rose-600 hover:bg-rose-500 text-white shadow-sm"
+                )}
+              >
+                <Eraser className="w-3.5 h-3.5" />
+                <span>Mode Hapus</span>
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant={brushMode === 'restore' ? 'default' : 'ghost'}
+                onClick={() => setBrushMode('restore')}
+                className={cn(
+                  "gap-1.5 text-xs h-8",
+                  brushMode === 'restore' && "bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm"
+                )}
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Mode Pulihkan</span>
+              </Button>
+            </div>
 
-        {/* Mode Buttons & Undo */}
-        <div className="flex items-center justify-between gap-2 mt-3">
-          <div className="flex items-center gap-2">
-            <button
+            <Button
               type="button"
-              onClick={() => setBrushMode('erase')}
-              className={`btn-brush-mode ${brushMode === 'erase' ? 'active-erase' : ''}`}
+              variant="outline"
+              size="sm"
+              onClick={handleUndo}
+              disabled={historyStack.length <= 1}
+              className="gap-1.5 text-xs h-8 text-muted-foreground hover:text-foreground"
+              title="Urungkan goresan terakhir"
             >
-              <Eraser className="w-3.5 h-3.5" />
-              <span>Mode Hapus</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setBrushMode('restore')}
-              className={`btn-brush-mode ${brushMode === 'restore' ? 'active-restore' : ''}`}
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Mode Pulihkan</span>
-            </button>
+              <Undo2 className="w-3.5 h-3.5" />
+              <span>Undo</span>
+            </Button>
           </div>
 
-          <button
-            type="button"
-            onClick={handleUndo}
-            disabled={historyStack.length <= 1}
-            className="btn-undo"
-            title="Urungkan goresan sikat terakhir"
-          >
-            <Undo2 className="w-4 h-4" />
-            <span className="hide-mobile">Undo</span>
-          </button>
-        </div>
-
-        {/* Canvas Area */}
-        <div className="canvas-viewport mt-3">
-          <canvas
-            ref={canvasRef}
-            className="eraser-canvas"
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={handlePointerUp}
-            style={{ touchAction: 'none' }}
-          />
-        </div>
-
-        {/* Brush Sliders */}
-        <div className="grid grid-cols-2 gap-3 mt-3 text-left">
-          <div className="slider-group">
-            <div className="slider-header">
-              <span>Ukuran Sikat</span>
-              <span className="slider-val">{brushSize}px</span>
-            </div>
-            <input
-              type="range"
-              min="4"
-              max="90"
-              value={brushSize}
-              onChange={(e) => setBrushSize(Number(e.target.value))}
-              className="slider-range"
+          {/* Canvas Area with Checkerboard Background */}
+          <div className="relative rounded-lg border border-border/80 overflow-hidden bg-zinc-950 flex items-center justify-center min-h-[300px] max-h-[420px]">
+            <div
+              className="absolute inset-0 opacity-20"
+              style={{
+                backgroundImage: 'radial-gradient(circle, #555 10%, transparent 11%)',
+                backgroundSize: '16px 16px',
+              }}
+            />
+            <canvas
+              ref={canvasRef}
+              className="relative max-h-[380px] max-w-full object-contain cursor-crosshair drop-shadow-md"
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerCancel={handlePointerUp}
+              style={{ touchAction: 'none' }}
             />
           </div>
 
-          <div className="slider-group">
-            <div className="slider-header">
-              <span>Kehalusan Tepi (Blur)</span>
-              <span className="slider-val">{brushBlur}px</span>
+          {/* Brush Sliders */}
+          <div className="grid grid-cols-2 gap-4 p-3.5 rounded-lg bg-secondary/20 border border-border/60">
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs font-medium">
+                <span className="text-muted-foreground">Ukuran Sikat</span>
+                <span className="text-amber-500 font-mono">{brushSize}px</span>
+              </div>
+              <input
+                type="range"
+                min="4"
+                max="90"
+                value={brushSize}
+                onChange={(e) => setBrushSize(Number(e.target.value))}
+                className="w-full accent-amber-500 h-1.5 bg-muted rounded-lg appearance-none cursor-pointer"
+              />
             </div>
-            <input
-              type="range"
-              min="0"
-              max="15"
-              value={brushBlur}
-              onChange={(e) => setBrushBlur(Number(e.target.value))}
-              className="slider-range"
-            />
+
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs font-medium">
+                <span className="text-muted-foreground">Kehalusan Tepi (Blur)</span>
+                <span className="text-amber-500 font-mono">{brushBlur}px</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="15"
+                value={brushBlur}
+                onChange={(e) => setBrushBlur(Number(e.target.value))}
+                className="w-full accent-amber-500 h-1.5 bg-muted rounded-lg appearance-none cursor-pointer"
+              />
+            </div>
           </div>
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-2.5 mt-4 pt-3 border-t border-slate-800">
-          <button
+        <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border bg-card/50">
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={onClose}
-            className="btn-secondary py-2 px-4"
           >
             Batal
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            size="sm"
             onClick={handleSaveResult}
-            className="btn-primary py-2 px-5"
+            className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold gap-1.5 shadow-sm"
           >
             <Check className="w-4 h-4" /> Gunakan Hasil
-          </button>
+          </Button>
         </div>
       </div>
     </div>

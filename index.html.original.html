@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ID Card Generator - The Gesit Companies</title>
-    
+
     <!-- Library untuk Export PNG, PDF, HEIC, dan Icon -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
+
     <!-- HEIC / HEIF Converters (Multi-Library Fallback System) -->
     <script src="https://cdn.jsdelivr.net/npm/libheif-js@1.17.1/libheif-wasm/libheif-bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/heic-to@1.5.2/dist/iife/heic-to.min.js"></script>
-    
+
     <!-- MediaPipe AI Selfie Segmentation -->
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js"
+        crossorigin="anonymous"></script>
+
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
@@ -245,8 +247,13 @@
         }
 
         @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* RANGE SLIDERS */
@@ -551,6 +558,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <!-- Header -->
@@ -574,7 +582,7 @@
 
     <!-- Main Content -->
     <main class="main-container">
-        
+
         <!-- CONTROLS PANEL (LEFT) -->
         <div>
             <!-- Form Data Nama -->
@@ -584,7 +592,8 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Nama Lengkap (Font Arial Bold)</label>
-                    <input type="text" id="inputName" value="JUAN NOVSKY YUNUS P." oninput="updateCardText()" class="form-input">
+                    <input type="text" id="inputName" value="JUAN NOVSKY YUNUS P." oninput="updateCardText()"
+                        class="form-input">
                 </div>
                 <div class="slider-group" style="margin-bottom: 12px;">
                     <div class="slider-header">
@@ -614,26 +623,36 @@
                 </div>
 
                 <div class="upload-box" onclick="document.getElementById('photoInput').click()">
-                    <input type="file" id="photoInput" accept="image/*,.heic,.heif,image/heic,image/heif" class="hidden" onchange="handlePhotoUpload(event)">
+                    <input type="file" id="photoInput" accept="image/*,.heic,.heif,image/heic,image/heif" class="hidden"
+                        onchange="handlePhotoUpload(event)">
                     <div class="upload-icon">
                         <i data-lucide="upload-cloud" style="width: 32px; height: 32px;"></i>
                     </div>
-                    <div style="font-size: 13px; font-weight: 600; color: #f8fafc;">Klik untuk upload foto karyawan</div>
-                    <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Mendukung JPG, PNG, WEBP & HEIC (iPhone)</div>
+                    <div style="font-size: 13px; font-weight: 600; color: #f8fafc;">Klik untuk upload foto karyawan
+                    </div>
+                    <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Mendukung JPG, PNG, WEBP & HEIC
+                        (iPhone)</div>
                 </div>
 
-                <div id="heicLoader" class="hidden" style="font-size: 12px; color: #f59e0b; margin-top: 10px; text-align: center;">
-                    <i data-lucide="loader" class="spin-icon" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i>
+                <div id="heicLoader" class="hidden"
+                    style="font-size: 12px; color: #f59e0b; margin-top: 10px; text-align: center;">
+                    <i data-lucide="loader" class="spin-icon"
+                        style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i>
                     <span>Sedang mengonversi format HEIC/HEIF Apple...</span>
                 </div>
 
                 <!-- AI Background Removal -->
-                <div style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 10px; padding: 12px; margin-top: 14px; margin-bottom: 12px;">
+                <div
+                    style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 10px; padding: 12px; margin-top: 14px; margin-bottom: 12px;">
                     <button onclick="removeBackgroundAI()" id="btnAiRemove" class="btn-ai-bg">
-                        <i data-lucide="sparkles" style="width: 16px; height: 16px; color: #60a5fa;"></i> Hapus Latar AI Presisi (Remove.bg)
+                        <i data-lucide="sparkles" style="width: 16px; height: 16px; color: #60a5fa;"></i> Hapus Latar AI
+                        Presisi (Remove.bg)
                     </button>
-                    <div id="aiProgressLoader" class="hidden" style="font-size: 11px; color: #38bdf8; text-align: center; margin-top: 8px;">
-                        <i data-lucide="loader" class="spin-icon" style="width: 12px; height: 12px; display: inline-block;"></i> Memproses AI segmentasi rambut & pakaian...
+                    <div id="aiProgressLoader" class="hidden"
+                        style="font-size: 11px; color: #38bdf8; text-align: center; margin-top: 8px;">
+                        <i data-lucide="loader" class="spin-icon"
+                            style="width: 12px; height: 12px; display: inline-block;"></i> Memproses AI segmentasi
+                        rambut & pakaian...
                     </div>
                     <div style="font-size: 11px; color: #94a3b8; text-align: center; margin-top: 6px;">
                         Model AI memotong otomatis tanpa merusak baju/model.
@@ -643,10 +662,12 @@
                 <!-- Background Removal Color Tools -->
                 <div class="bg-tools-grid">
                     <button onclick="removeSmartBackground('auto')" class="btn-tool">
-                        <i data-lucide="wand-2" style="width: 14px; height: 14px; color: #f59e0b;"></i> Hapus Warna Latar
+                        <i data-lucide="wand-2" style="width: 14px; height: 14px; color: #f59e0b;"></i> Hapus Warna
+                        Latar
                     </button>
                     <button onclick="removeSmartBackground('white')" class="btn-tool">
-                        <i data-lucide="sun" style="width: 14px; height: 14px; color: #f59e0b;"></i> Hapus Putih / Terang
+                        <i data-lucide="sun" style="width: 14px; height: 14px; color: #f59e0b;"></i> Hapus Putih /
+                        Terang
                     </button>
                 </div>
 
@@ -655,12 +676,14 @@
                         <span>Toleransi Hapus Latar Warna</span>
                         <span id="bgToleranceVal" class="slider-val">40</span>
                     </div>
-                    <input type="range" id="bgToleranceSlider" min="10" max="120" value="40" oninput="document.getElementById('bgToleranceVal').innerText = this.value">
+                    <input type="range" id="bgToleranceSlider" min="10" max="120" value="40"
+                        oninput="document.getElementById('bgToleranceVal').innerText = this.value">
                 </div>
 
                 <div style="margin-top: 10px;">
                     <button onclick="openEraserModal()" class="btn-tool" style="width: 100%;">
-                        <i data-lucide="eraser" style="width: 14px; height: 14px; color: #f59e0b;"></i> Sikat Manual (Hapus & Pulihkan)
+                        <i data-lucide="eraser" style="width: 14px; height: 14px; color: #f59e0b;"></i> Sikat Manual
+                        (Hapus & Pulihkan)
                     </button>
                 </div>
 
@@ -677,13 +700,15 @@
                         <div class="slider-header">
                             <span>Geser Horisontal (X)</span>
                         </div>
-                        <input type="range" id="posXSlider" min="-600" max="600" value="0" oninput="adjustPhotoTransform()">
+                        <input type="range" id="posXSlider" min="-600" max="600" value="0"
+                            oninput="adjustPhotoTransform()">
                     </div>
                     <div>
                         <div class="slider-header">
                             <span>Geser Vertikal (Y)</span>
                         </div>
-                        <input type="range" id="posYSlider" min="-600" max="600" value="0" oninput="adjustPhotoTransform()">
+                        <input type="range" id="posYSlider" min="-600" max="600" value="0"
+                            oninput="adjustPhotoTransform()">
                     </div>
                 </div>
 
@@ -714,30 +739,23 @@
 
             <!-- ID CARD CANVAS LAYER STACK -->
             <div id="idCardCanvas" class="id-card-frame">
-                
+
                 <!-- LAYER 1: BACKGROUND -->
-                <img id="bgLayer" 
-                     src="https://res.cloudinary.com/dmr8bxdos/image/upload/v1789007312/bg_id_swhqgb.png" 
-                     crossorigin="anonymous" 
-                     class="layer-bg" 
-                     alt="Background">
+                <img id="bgLayer" src="https://res.cloudinary.com/dmr8bxdos/image/upload/v1789007312/bg_id_swhqgb.png"
+                    crossorigin="anonymous" class="layer-bg" alt="Background">
 
                 <!-- LAYER 2: PHOTO -->
                 <div class="layer-photo-container">
-                    <img id="userPhoto" 
-                         src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" 
-                         crossorigin="anonymous" 
-                         class="layer-photo" 
-                         alt="Foto Karyawan"
-                         style="transform: translate(0px, 0px) scale(1);">
+                    <img id="userPhoto"
+                        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop"
+                        crossorigin="anonymous" class="layer-photo" alt="Foto Karyawan"
+                        style="transform: translate(0px, 0px) scale(1);">
                 </div>
 
                 <!-- LAYER 3: SHAPE OVERLAY -->
-                <img id="shapeLayer" 
-                     src="https://res.cloudinary.com/dmr8bxdos/image/upload/v1789007312/Shape_1_t2jn41.png" 
-                     crossorigin="anonymous" 
-                     class="layer-shape" 
-                     alt="Shape Overlay">
+                <img id="shapeLayer"
+                    src="https://res.cloudinary.com/dmr8bxdos/image/upload/v1789007312/Shape_1_t2jn41.png"
+                    crossorigin="anonymous" class="layer-shape" alt="Shape Overlay">
 
                 <!-- LAYER 4: ARIAL BOLD TEXT OVERLAY -->
                 <div class="layer-text">
@@ -756,7 +774,8 @@
             </div> <!-- End idCardCanvas -->
 
             <div class="grid-note">
-                Petunjuk: Seret foto atau gunakan slider X/Y & Zoom untuk menyesuaikan posisi foto secara ideal. Teks menggunakan Arial Bold resmi.
+                Petunjuk: Seret foto atau gunakan slider X/Y & Zoom untuk menyesuaikan posisi foto secara ideal. Teks
+                menggunakan Arial Bold resmi.
             </div>
         </div>
     </main>
@@ -764,22 +783,28 @@
     <!-- ERASER BRUSH MODAL WITH DUAL MODE -->
     <div id="eraserModal" class="modal-overlay hidden">
         <div class="modal-content" style="max-width: 580px;">
-            <h3 style="font-size: 16px; font-weight: 700; color: #ffffff; margin-bottom: 6px;">Sikat Manual (Hapus & Pulihkan)</h3>
+            <h3 style="font-size: 16px; font-weight: 700; color: #ffffff; margin-bottom: 6px;">Sikat Manual (Hapus &
+                Pulihkan)</h3>
             <p style="font-size: 12px; color: #94a3b8; margin-bottom: 12px;">
-                Gunakan Sikat Hapus untuk menghilangkan sisa background, atau Sikat Pulihkan untuk mengembalikan baju/rambut yang terpotong.
+                Gunakan Sikat Hapus untuk menghilangkan sisa background, atau Sikat Pulihkan untuk mengembalikan
+                baju/rambut yang terpotong.
             </p>
-            
+
             <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 12px;">
-                <button onclick="setBrushMode('erase')" id="btnToolErase" class="btn-tool" style="background-color: #ef4444; color: white;">
+                <button onclick="setBrushMode('erase')" id="btnToolErase" class="btn-tool"
+                    style="background-color: #ef4444; color: white;">
                     <i data-lucide="eraser" style="width: 14px; height: 14px;"></i> Mode Hapus
                 </button>
-                <button onclick="setBrushMode('restore')" id="btnToolRestore" class="btn-tool" style="background-color: #1e293b; color: #cbd5e1;">
+                <button onclick="setBrushMode('restore')" id="btnToolRestore" class="btn-tool"
+                    style="background-color: #1e293b; color: #cbd5e1;">
                     <i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i> Mode Pulihkan (Sikat Balik)
                 </button>
             </div>
 
-            <div style="background-color: #020617; border: 1px solid #334155; border-radius: 8px; padding: 10px; display: inline-block; max-height: 380px; overflow: auto;">
-                <canvas id="eraserCanvas" style="cursor: crosshair; max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 0 auto;"></canvas>
+            <div
+                style="background-color: #020617; border: 1px solid #334155; border-radius: 8px; padding: 10px; display: inline-block; max-height: 380px; overflow: auto;">
+                <canvas id="eraserCanvas"
+                    style="cursor: crosshair; max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 0 auto;"></canvas>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; text-align: left;">
@@ -788,20 +813,23 @@
                         <span>Ukuran Sikat</span>
                         <span id="brushSizeVal" class="slider-val">20px</span>
                     </div>
-                    <input type="range" id="brushSize" min="3" max="80" value="20" oninput="document.getElementById('brushSizeVal').innerText = this.value + 'px'">
+                    <input type="range" id="brushSize" min="3" max="80" value="20"
+                        oninput="document.getElementById('brushSizeVal').innerText = this.value + 'px'">
                 </div>
                 <div>
                     <div class="slider-header">
                         <span>Kehalusan Pinggir (Softness)</span>
                         <span id="brushBlurVal" class="slider-val">2px</span>
                     </div>
-                    <input type="range" id="brushBlur" min="0" max="15" value="2" oninput="document.getElementById('brushBlurVal').innerText = this.value + 'px'">
+                    <input type="range" id="brushBlur" min="0" max="15" value="2"
+                        oninput="document.getElementById('brushBlurVal').innerText = this.value + 'px'">
                 </div>
             </div>
 
             <div style="display: flex; gap: 10px; margin-top: 18px;">
                 <button onclick="saveEraserResult()" class="btn-primary" style="padding: 10px;">Gunakan Hasil</button>
-                <button onclick="closeEraserModal()" class="btn-secondary" style="padding: 10px; margin-top: 0;">Batal</button>
+                <button onclick="closeEraserModal()" class="btn-secondary"
+                    style="padding: 10px; margin-top: 0;">Batal</button>
             </div>
         </div>
     </div>
@@ -812,11 +840,13 @@
             <div style="color: #f59e0b; margin-bottom: 12px;">
                 <i data-lucide="alert-triangle" style="width: 42px; height: 42px;"></i>
             </div>
-            <h3 style="font-size: 16px; font-weight: 700; color: #ffffff; margin-bottom: 8px;">Format HEIC iPhone Tidak Terbaca</h3>
+            <h3 style="font-size: 16px; font-weight: 700; color: #ffffff; margin-bottom: 8px;">Format HEIC iPhone Tidak
+                Terbaca</h3>
             <p style="font-size: 13px; color: #cbd5e1; line-height: 1.5; margin-bottom: 16px;">
-                Browser ini tidak dapat mendekode secara langsung format HEIC (Apple HDR / Live Photo). 
+                Browser ini tidak dapat mendekode secara langsung format HEIC (Apple HDR / Live Photo).
             </p>
-            <div style="background-color: #020617; border: 1px solid #334155; border-radius: 8px; padding: 12px; text-align: left; font-size: 12px; color: #94a3b8; margin-bottom: 16px;">
+            <div
+                style="background-color: #020617; border: 1px solid #334155; border-radius: 8px; padding: 12px; text-align: left; font-size: 12px; color: #94a3b8; margin-bottom: 16px;">
                 <strong style="color: #f8fafc;">Solusi Praktis:</strong>
                 <ol style="margin-left: 18px; margin-top: 6px; line-height: 1.6;">
                     <li>Buka foto di iPhone / Galeri HP Anda.</li>
@@ -845,7 +875,7 @@
         function updateCardText() {
             const nameVal = document.getElementById('inputName').value || '';
             const deptVal = document.getElementById('inputDept').value || '';
-            
+
             const nameSize = document.getElementById('nameFontSizeSlider')?.value || 22;
             const deptSize = document.getElementById('deptFontSizeSlider')?.value || 15;
 
@@ -868,7 +898,7 @@
             posY = document.getElementById('posYSlider').value;
 
             document.getElementById('zoomValue').innerText = Math.round(zoomScale * 100) + '%';
-            
+
             const photoEl = document.getElementById('userPhoto');
             photoEl.style.transform = `translate(${posX}px, ${posY}px) scale(${zoomScale})`;
         }
@@ -891,25 +921,25 @@
                     const arrayBuffer = await file.arrayBuffer();
                     const decoder = new libheifObj.HeifDecoder();
                     const data = decoder.decode(arrayBuffer);
-                    
+
                     if (data && data.length > 0) {
                         const image = data[0];
                         const width = image.get_width();
                         const height = image.get_height();
-                        
+
                         const cvs = document.createElement('canvas');
                         cvs.width = width;
                         cvs.height = height;
                         const ctx = cvs.getContext('2d');
-                        
+
                         const imgData = ctx.createImageData(width, height);
-                        
+
                         const displayData = await new Promise((resolve) => {
                             image.display({ data: imgData.data, width, height }, (res) => {
                                 resolve(res);
                             });
                         });
-                        
+
                         if (displayData) {
                             ctx.putImageData(new ImageData(displayData.data, width, height), 0, 0);
                             const blob = await new Promise(r => cvs.toBlob(r, 'image/jpeg', 0.92));
@@ -973,7 +1003,7 @@
                     img.onerror = () => resolve(false);
                     img.src = blobUrl;
                 });
-                
+
                 if (loaded && img.width > 0) {
                     const cvs = document.createElement('canvas');
                     cvs.width = img.naturalWidth || img.width;
@@ -981,7 +1011,7 @@
                     const ctx = cvs.getContext('2d');
                     ctx.drawImage(img, 0, 0);
                     URL.revokeObjectURL(blobUrl);
-                    
+
                     const blob = await new Promise(r => cvs.toBlob(r, 'image/jpeg', 0.9));
                     if (blob) return blob;
                 }
@@ -1001,15 +1031,15 @@
             const fileName = file.name.toLowerCase();
             const fileType = (file.type || '').toLowerCase();
 
-            const isHeic = fileName.endsWith('.heic') || 
-                           fileName.endsWith('.heif') || 
-                           fileType.includes('heic') || 
-                           fileType.includes('heif');
+            const isHeic = fileName.endsWith('.heic') ||
+                fileName.endsWith('.heif') ||
+                fileType.includes('heic') ||
+                fileType.includes('heif');
 
             try {
                 if (isHeic) {
                     if (loader) loader.classList.remove('hidden');
-                    
+
                     try {
                         const convertedBlob = await convertHeicToBlob(file);
                         const url = URL.createObjectURL(convertedBlob);
@@ -1020,10 +1050,10 @@
                     }
                 } else {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         setNewPhotoSource(e.target.result);
                     };
-                    reader.onerror = function() {
+                    reader.onerror = function () {
                         alert("Gagal membaca file gambar. Silakan coba file gambar lain.");
                     };
                     reader.readAsDataURL(file);
@@ -1051,7 +1081,7 @@
 
             const loader = document.getElementById('aiProgressLoader');
             const btnAi = document.getElementById('btnAiRemove');
-            
+
             if (loader) loader.classList.remove('hidden');
             if (btnAi) btnAi.disabled = true;
 
@@ -1065,7 +1095,7 @@
                         const res = await fetch(sourceSrc, { mode: 'cors' });
                         const blob = await res.blob();
                         sourceSrc = URL.createObjectURL(blob);
-                    } catch(e) {
+                    } catch (e) {
                         console.warn("CORS fetch fallback", e);
                     }
                 }
@@ -1114,7 +1144,7 @@
 
                             photoEl.src = canvas.toDataURL('image/png');
                             resolve();
-                        } catch(err) {
+                        } catch (err) {
                             reject(err);
                         }
                     });
@@ -1153,7 +1183,7 @@
                             imageToDraw.onerror = reject;
                             imageToDraw.src = blobUrl;
                         });
-                    } catch(e) {
+                    } catch (e) {
                         console.warn("CORS fetch preview fallback", e);
                     }
                 }
@@ -1275,14 +1305,14 @@
 
             const origImg = new Image();
             origImg.crossOrigin = "anonymous";
-            origImg.onload = function() {
+            origImg.onload = function () {
                 origCtx.drawImage(origImg, 0, 0, w, h);
             };
             origImg.src = originalPhotoSrc || img.src;
 
             const tempImg = new Image();
             tempImg.crossOrigin = "anonymous";
-            tempImg.onload = function() {
+            tempImg.onload = function () {
                 eraserCtx.clearRect(0, 0, w, h);
                 eraserCtx.drawImage(tempImg, 0, 0, w, h);
             };
@@ -1356,7 +1386,7 @@
         async function downloadPNG() {
             const cardEl = document.getElementById('idCardCanvas');
             const gridEl = document.getElementById('gridLayer');
-            
+
             if (gridEl) gridEl.classList.add('hidden');
 
             try {
@@ -1419,4 +1449,5 @@
         });
     </script>
 </body>
+
 </html>
