@@ -1,74 +1,67 @@
-// MediaPipe Selfie Segmentation & Smart Color Removal
+/**
+ * AI Background Removal menggunakan @imgly/background-removal
+ * ─ 100% gratis, tidak perlu API key
+ * ─ AI model ONNX berjalan langsung di browser (WebAssembly)
+ * ─ Tidak ada limit penggunaan
+ */
 
-let selfieSegmentationModel = null;
+let removeBackgroundFn = null;
 
-export async function segmentPortraitAI(sourceSrc) {
-  if (typeof window.SelfieSegmentation === 'undefined') {
-    throw new Error('Pustaka MediaPipe AI sedang dimuat atau belum tersedia.');
+async function getRemoveBackground() {
+  if (removeBackgroundFn) return removeBackgroundFn;
+  // Lazy-load agar tidak memperlambat inisialisasi app
+  const mod = await import('@imgly/background-removal');
+  removeBackgroundFn = mod.removeBackground;
+  return removeBackgroundFn;
+}
+
+/**
+ * Hapus background foto menggunakan AI ONNX (imgly)
+ * @param {string} imgSrc  - URL atau data URL foto
+ * @param {function} onProgress - callback progress (0-1)
+ * @returns {Promise<string>} - data URL PNG transparan
+ */
+export async function segmentPortraitAI(imgSrc, onProgress) {
+  const removeBackground = await getRemoveBackground();
+
+  // Konversi data URL / URL ke Blob
+  let blob;
+  if (imgSrc.startsWith('data:')) {
+    const res = await fetch(imgSrc);
+    blob = await res.blob();
+  } else {
+    const res = await fetch(imgSrc, { mode: 'cors' });
+    blob = await res.blob();
   }
 
-  const img = new Image();
-  img.crossOrigin = 'anonymous';
-
-  let finalSrc = sourceSrc;
-  if (sourceSrc.startsWith('http') && !sourceSrc.startsWith(window.location.origin)) {
-    try {
-      const res = await fetch(sourceSrc, { mode: 'cors' });
-      const blob = await res.blob();
-      finalSrc = URL.createObjectURL(blob);
-    } catch (e) {
-      console.warn('CORS direct fetch fallback:', e);
-    }
-  }
-
-  await new Promise((resolve, reject) => {
-    img.onload = resolve;
-    img.onerror = reject;
-    img.src = finalSrc;
+  const resultBlob = await removeBackground(blob, {
+    publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/dist/',
+    // Model medium: keseimbangan kecepatan & kualitas
+    model: 'medium',
+    // Output format PNG dengan alpha channel
+    output: {
+      format: 'image/png',
+      quality: 1.0,
+    },
+    progress: (key, current, total) => {
+      if (onProgress && total > 0) {
+        onProgress(current / total);
+      }
+    },
   });
 
-  const canvas = document.createElement('canvas');
-  canvas.width = img.naturalWidth || img.width || 600;
-  canvas.height = img.naturalHeight || img.height || 800;
-  const ctx = canvas.getContext('2d');
-
-  if (!selfieSegmentationModel) {
-    selfieSegmentationModel = new window.SelfieSegmentation({
-      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`,
-    });
-    selfieSegmentationModel.setOptions({
-      modelSelection: 1, // High quality portrait segmentation
-    });
-  }
-
   return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => reject(new Error('Timeout memproses AI (25 detik)')), 25000);
-
-    selfieSegmentationModel.onResults((results) => {
-      clearTimeout(timeout);
-      try {
-        ctx.save();
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // 1. Gambar masker segmentasi
-        ctx.drawImage(results.segmentationMask, 0, 0, canvas.width, canvas.height);
-
-        // 2. Potong foto sesuai masker
-        ctx.globalCompositeOperation = 'source-in';
-        ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
-
-        ctx.restore();
-        const dataUrl = canvas.toDataURL('image/png');
-        resolve(dataUrl);
-      } catch (err) {
-        reject(err);
-      }
-    });
-
-    selfieSegmentationModel.send({ image: img }).catch(reject);
+    const reader = new FileReader();
+    reader.onload = (e) => resolve(e.target.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(resultBlob);
   });
 }
 
+/**
+ * Hapus background berdasarkan warna (flood-fill color matching)
+ * Untuk foto dengan latar solid (putih/biru/merah)
+ */
 export async function removeColorBackground(imgSrc, mode = 'auto', tolerance = 40) {
   const img = new Image();
   img.crossOrigin = 'anonymous';
@@ -104,16 +97,12 @@ export async function removeColorBackground(imgSrc, mode = 'auto', tolerance = 4
   let targetR, targetG, targetB;
 
   if (mode === 'white') {
-    targetR = 250;
-    targetG = 250;
-    targetB = 250;
+    targetR = 250; targetG = 250; targetB = 250;
   } else {
-    // Ambil sampel rata-rata 4 sudut foto
     const sampleCorner = (x, y) => {
       const idx = (y * w + x) * 4;
       return { r: data[idx], g: data[idx + 1], b: data[idx + 2] };
     };
-
     const c1 = sampleCorner(Math.min(8, w - 1), Math.min(8, h - 1));
     const c2 = sampleCorner(Math.max(0, w - 8), Math.min(8, h - 1));
     const c3 = sampleCorner(Math.min(8, w - 1), Math.max(0, h - 8));
@@ -127,15 +116,8 @@ export async function removeColorBackground(imgSrc, mode = 'auto', tolerance = 4
   const maxDist = tolerance * 2.2;
 
   for (let i = 0; i < data.length; i += 4) {
-    const r = data[i];
-    const g = data[i + 1];
-    const b = data[i + 2];
-
-    const dist = Math.sqrt(
-      (r - targetR) ** 2 +
-      (g - targetG) ** 2 +
-      (b - targetB) ** 2
-    );
+    const r = data[i], g = data[i + 1], b = data[i + 2];
+    const dist = Math.sqrt((r - targetR) ** 2 + (g - targetG) ** 2 + (b - targetB) ** 2);
 
     if (mode === 'white') {
       if (r > (255 - tolerance) && g > (255 - tolerance) && b > (255 - tolerance)) {
