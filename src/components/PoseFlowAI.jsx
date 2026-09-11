@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Upload, 
   Sparkles, 
@@ -57,7 +57,7 @@ async function fetchWithRetry(url, options, maxRetries = 3) {
 }
 
 async function callGeminiText({ prompt, systemInstruction = "", imageBase64 = null, imageMime = "image/jpeg", responseSchema = null }) {
-  const apiKey = "";
+  const apiKey = "AIzaSyBFpr_80NhTtsbtkB3vF1zUedR01VrjzOw";
   const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
 
   const parts = [];
@@ -98,7 +98,7 @@ async function callGeminiText({ prompt, systemInstruction = "", imageBase64 = nu
 }
 
 async function callGeminiImage({ prompt, faceBase64, faceMime, clothingBase64, clothingMime, aspectRatio = "1:1" }) {
-  const apiKey = "";
+  const apiKey = "AIzaSyBFpr_80NhTtsbtkB3vF1zUedR01VrjzOw";
   const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${apiKey}`;
 
   const parts = [];
