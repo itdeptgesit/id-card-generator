@@ -134,9 +134,9 @@ export default function App() {
       />
 
       {/* Main Grid Layout */}
-      <main className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 items-start">
         {/* Kolom Kiri: Formulir & Kontrol Editing */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3 sm:gap-4">
           <FormControls
             cardData={cardData}
             onChange={setCardData}
@@ -178,7 +178,7 @@ export default function App() {
       </main>
 
       {/* Antrean & Cetak Lembar A4 (10 ID Card) */}
-      <div className="max-w-7xl mx-auto px-4 mt-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 mt-4 sm:mt-6">
         <BatchPrintManager
           frontRef={frontCardRef}
           backRef={backCardRef}
@@ -199,12 +199,12 @@ export default function App() {
       />
 
       {/* Footer Aplikasi */}
-      <footer className="mt-12 py-6 px-4 border-t border-border/60 bg-card/50 backdrop-blur-sm text-center">
+      <footer className="mt-8 sm:mt-12 py-4 sm:py-6 px-3 sm:px-4 border-t border-border/60 bg-card/50 backdrop-blur-sm text-center">
         <div className="max-w-7xl mx-auto flex flex-col gap-1 items-center">
-          <p className="text-sm font-medium text-muted-foreground">
-            Copyright © {new Date().getFullYear()} <strong className="text-amber-500">IT Gesit</strong> • Developed by <strong className="text-amber-500">Mr Siarudin</strong>
+          <p className="text-xs sm:text-sm font-medium text-muted-foreground">
+            Copyright © {new Date().getFullYear()} <strong className="text-zinc-200 font-semibold">IT Gesit</strong> • Developed by <strong className="text-zinc-200 font-semibold">Mr Siarudin</strong>
           </p>
-          <p className="text-xs text-muted-foreground/60">
+          <p className="text-[10px] sm:text-xs text-muted-foreground/60">
             The Gesit Companies • ID Card Studio Pro
           </p>
         </div>

@@ -76,27 +76,27 @@ export default function ExportBar({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 mt-6">
+    <div className="max-w-7xl mx-auto px-3 sm:px-4 mt-4 sm:mt-6">
       {/* Loading overlay */}
       {isExporting && (
-        <div className="mb-3 flex items-center gap-3 px-4 py-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-semibold">
-          <Loader2 className="w-5 h-5 animate-spin" />
+        <div className="mb-3 flex items-center gap-3 px-4 py-3 rounded-xl bg-secondary border border-border text-foreground text-sm font-semibold shadow-md">
+          <Loader2 className="w-5 h-5 animate-spin shrink-0 text-foreground" />
           <span>{exportLabel}</span>
         </div>
       )}
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5">
         {/* Download PNG HD */}
         <Button
           type="button"
-          variant="amber"
+          variant="default"
           onClick={handleExportPng}
           disabled={isExporting}
-          className="gap-2 text-xs h-10"
+          className="gap-2 text-xs h-10 rounded-xl"
           title="Unduh gambar PNG resolusi tinggi (300 DPI)"
         >
-          <Download className="w-4 h-4" />
-          <span>Download PNG HD</span>
+          <Download className="w-4 h-4 shrink-0" />
+          <span>PNG HD</span>
         </Button>
 
         {/* Export PDF CR80 */}
@@ -105,11 +105,11 @@ export default function ExportBar({
           variant="outline"
           onClick={handleExportSinglePdf}
           disabled={isExporting}
-          className="gap-2 text-xs h-10 border-border hover:border-cyan-500/40"
+          className="gap-2 text-xs h-10 border-border hover:bg-secondary rounded-xl text-foreground"
           title="Export format PDF ukuran kartu CR80 (54 x 85.6 mm)"
         >
-          <FileText className="w-4 h-4 text-cyan-400" />
-          <span>PDF Kartu CR80</span>
+          <FileText className="w-4 h-4 text-muted-foreground shrink-0" />
+          <span>PDF CR80</span>
         </Button>
 
         {/* Export PDF Lembar A4 */}
@@ -118,11 +118,11 @@ export default function ExportBar({
           variant="outline"
           onClick={handleExportA4Sheet}
           disabled={isExporting}
-          className="gap-2 text-xs h-10 border-border hover:border-amber-500/40"
+          className="gap-2 text-xs h-10 border-border hover:bg-secondary rounded-xl text-foreground"
           title="Export lembar cetak A4 berisi kartu Depan & Belakang dengan garis potong"
         >
-          <FileSpreadsheet className="w-4 h-4 text-amber-400" />
-          <span>PDF Cetak Lembar A4</span>
+          <FileSpreadsheet className="w-4 h-4 text-muted-foreground shrink-0" />
+          <span>PDF Lembar A4</span>
         </Button>
 
         {/* Cetak Langsung */}
@@ -131,11 +131,11 @@ export default function ExportBar({
           variant="outline"
           onClick={handleBrowserPrint}
           disabled={isExporting}
-          className="gap-2 text-xs h-10 border-border hover:border-emerald-500/40"
+          className="gap-2 text-xs h-10 border-border hover:bg-secondary rounded-xl text-foreground"
           title="Cetak langsung menggunakan dialog printer peramban"
         >
-          <Printer className="w-4 h-4 text-emerald-400" />
-          <span>Cetak Printer</span>
+          <Printer className="w-4 h-4 text-muted-foreground shrink-0" />
+          <span>Cetak</span>
         </Button>
       </div>
     </div>

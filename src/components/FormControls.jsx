@@ -18,10 +18,10 @@ export default function FormControls({
   };
 
   return (
-    <Card className="border-border/80 bg-card/95 shadow-md">
+    <Card className="border-border bg-card shadow-sm rounded-2xl">
       <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-bold text-amber-500 uppercase tracking-wide">
-          <UserCheck className="w-4 h-4 text-amber-500" />
+        <CardTitle className="text-sm font-semibold text-foreground uppercase tracking-wide flex items-center gap-2">
+          <UserCheck className="w-4 h-4 text-zinc-400" />
           <span>Data &amp; Teks Identitas Kartu</span>
         </CardTitle>
       </CardHeader>
@@ -29,21 +29,21 @@ export default function FormControls({
       <CardContent className="space-y-4">
         {/* Pilihan Entitas / Template Perusahaan */}
         <div className="space-y-2">
-          <label className="text-xs font-semibold text-foreground/90 block">
+          <label className="text-xs font-medium text-foreground/90 block">
             Template Perusahaan
           </label>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               className={cn(
-                'flex flex-col text-left p-3 rounded-lg border transition-all text-xs',
+                'flex flex-col text-left p-3 rounded-xl border transition-all text-xs',
                 companyTemplate === 'gesit'
-                  ? 'border-amber-500 bg-amber-500/10 shadow-sm shadow-amber-500/10'
-                  : 'border-border bg-background/50 hover:bg-accent hover:border-border/80'
+                  ? 'border-white/25 bg-secondary text-foreground shadow-sm'
+                  : 'border-border bg-secondary/30 text-muted-foreground hover:text-foreground hover:bg-secondary/60'
               )}
               onClick={() => onCompanyTemplateChange('gesit')}
             >
-              <span className={cn('font-bold', companyTemplate === 'gesit' ? 'text-amber-400' : 'text-foreground')}>
+              <span className={cn('font-semibold', companyTemplate === 'gesit' ? 'text-foreground' : 'text-muted-foreground')}>
                 The Gesit Companies
               </span>
               <span className="text-[11px] text-muted-foreground mt-0.5">
@@ -54,14 +54,14 @@ export default function FormControls({
             <button
               type="button"
               className={cn(
-                'flex flex-col text-left p-3 rounded-lg border transition-all text-xs',
+                'flex flex-col text-left p-3 rounded-xl border transition-all text-xs',
                 companyTemplate === 'gnr'
-                  ? 'border-amber-500 bg-amber-500/10 shadow-sm shadow-amber-500/10'
-                  : 'border-border bg-background/50 hover:bg-accent hover:border-border/80'
+                  ? 'border-white/25 bg-secondary text-foreground shadow-sm'
+                  : 'border-border bg-secondary/30 text-muted-foreground hover:text-foreground hover:bg-secondary/60'
               )}
               onClick={() => onCompanyTemplateChange('gnr')}
             >
-              <span className={cn('font-bold', companyTemplate === 'gnr' ? 'text-amber-400' : 'text-foreground')}>
+              <span className={cn('font-semibold', companyTemplate === 'gnr' ? 'text-foreground' : 'text-muted-foreground')}>
                 Gesit Natural Resources
               </span>
               <span className="text-[11px] text-muted-foreground mt-0.5">
@@ -76,14 +76,14 @@ export default function FormControls({
         {/* Nama Lengkap */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <label className="text-xs font-semibold text-foreground/90">
+            <label className="text-xs font-medium text-foreground/90">
               Nama Lengkap <span className="font-normal text-muted-foreground">(Font Arial Bold)</span>
             </label>
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="font-mono text-[10px] px-1.5 py-0 h-4 border-border text-muted-foreground">
+              <Badge variant="outline" className="font-mono text-[10px] px-1.5 py-0 h-4 border-border text-muted-foreground rounded-md">
                 {(cardData.name || '').length}/21
               </Badge>
-              <span className="text-xs font-mono font-semibold text-amber-400">{cardData.nameFontSize}px</span>
+              <span className="text-xs font-mono font-medium text-muted-foreground">{cardData.nameFontSize}px</span>
               <input
                 type="color"
                 value={cardData.nameColor || '#000000'}
@@ -99,7 +99,7 @@ export default function FormControls({
             maxLength={21}
             onChange={(e) => handleChange('name', e.target.value.toUpperCase())}
             placeholder="NAMA LENGKAP"
-            className="font-bold tracking-wide"
+            className="font-bold tracking-wide rounded-xl bg-secondary/40 border-border"
           />
           <input
             type="range"
@@ -107,18 +107,18 @@ export default function FormControls({
             max="34"
             value={cardData.nameFontSize}
             onChange={(e) => handleChange('nameFontSize', Number(e.target.value))}
-            className="w-full accent-amber-500 cursor-pointer h-1.5 bg-muted rounded-lg appearance-none"
+            className="w-full accent-white cursor-pointer h-1.5 bg-secondary rounded-lg appearance-none"
           />
         </div>
 
         {/* Jabatan / Divisi */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <label className="text-xs font-semibold text-foreground/90">
+            <label className="text-xs font-medium text-foreground/90">
               Jabatan / Divisi <span className="font-normal text-muted-foreground">(Font Arial Bold)</span>
             </label>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-semibold text-amber-400">{cardData.deptFontSize}px</span>
+              <span className="text-xs font-mono font-medium text-muted-foreground">{cardData.deptFontSize}px</span>
               <input
                 type="color"
                 value={cardData.deptColor || '#BE913B'}
@@ -133,7 +133,7 @@ export default function FormControls({
             value={cardData.department}
             onChange={(e) => handleChange('department', e.target.value.toUpperCase())}
             placeholder="DIVISI"
-            className="font-semibold"
+            className="font-semibold rounded-xl bg-secondary/40 border-border"
           />
           <input
             type="range"
@@ -141,7 +141,7 @@ export default function FormControls({
             max="26"
             value={cardData.deptFontSize}
             onChange={(e) => handleChange('deptFontSize', Number(e.target.value))}
-            className="w-full accent-amber-500 cursor-pointer h-1.5 bg-muted rounded-lg appearance-none"
+            className="w-full accent-white cursor-pointer h-1.5 bg-secondary rounded-lg appearance-none"
           />
         </div>
 
@@ -149,15 +149,17 @@ export default function FormControls({
 
         {/* Perataan Teks (Alignment) */}
         <div className="space-y-2">
-          <label className="text-xs font-semibold text-foreground/90">Perataan Teks</label>
+          <label className="text-xs font-medium text-foreground/90">Perataan Teks</label>
           <div className="grid grid-cols-2 gap-2">
             <Button
               type="button"
-              variant={cardData.textAlign === 'left' ? 'secondary' : 'outline'}
+              variant={cardData.textAlign === 'left' ? 'default' : 'outline'}
               size="sm"
               className={cn(
-                'justify-center text-xs gap-2',
-                cardData.textAlign === 'left' && 'bg-amber-500/10 border-amber-500/50 text-amber-400 font-semibold'
+                'justify-center text-xs gap-2 rounded-xl transition-all',
+                cardData.textAlign === 'left'
+                  ? 'bg-white text-zinc-950 dark:bg-white dark:text-zinc-950 font-semibold shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
               )}
               onClick={() => handleChange('textAlign', 'left')}
             >
@@ -165,11 +167,13 @@ export default function FormControls({
             </Button>
             <Button
               type="button"
-              variant={cardData.textAlign === 'center' ? 'secondary' : 'outline'}
+              variant={cardData.textAlign === 'center' ? 'default' : 'outline'}
               size="sm"
               className={cn(
-                'justify-center text-xs gap-2',
-                cardData.textAlign === 'center' && 'bg-amber-500/10 border-amber-500/50 text-amber-400 font-semibold'
+                'justify-center text-xs gap-2 rounded-xl transition-all',
+                cardData.textAlign === 'center'
+                  ? 'bg-white text-zinc-950 dark:bg-white dark:text-zinc-950 font-semibold shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
               )}
               onClick={() => handleChange('textAlign', 'center')}
             >

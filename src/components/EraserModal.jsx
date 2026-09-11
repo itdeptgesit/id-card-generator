@@ -160,46 +160,46 @@ export default function EraserModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in">
-      <div className="w-full max-w-xl bg-card border border-border/80 rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-2 sm:p-4 animate-in fade-in">
+      <div className="w-full max-w-xl bg-card border border-border rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[95vh] sm:max-h-[90vh]">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-card/50">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center">
+        <div className="flex items-center justify-between px-3 sm:px-6 py-3 sm:py-4 border-b border-border bg-secondary/30">
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-secondary border border-border text-foreground flex items-center justify-center shrink-0">
               <Eraser className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="font-semibold text-foreground text-sm">Sikat Manual (Hapus & Pulihkan)</h3>
-              <p className="text-xs text-muted-foreground">Sentuh atau usap kursor pada kanvas untuk mengedit</p>
+              <h3 className="font-semibold text-foreground text-sm">Sikat Manual (Hapus &amp; Pulihkan)</h3>
+              <p className="text-xs text-muted-foreground hidden sm:block">Sentuh atau usap kursor pada kanvas untuk mengedit</p>
             </div>
           </div>
           <Button
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+            className="h-8 w-8 text-muted-foreground hover:text-foreground shrink-0 rounded-lg"
           >
             <X className="w-4 h-4" />
           </Button>
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 overflow-y-auto flex flex-col gap-4">
+        <div className="p-3 sm:p-6 overflow-y-auto flex flex-col gap-3 sm:gap-4">
           {/* Mode Buttons & Undo */}
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 p-1 bg-secondary/40 rounded-lg border border-border/50">
+            <div className="flex items-center gap-1 sm:gap-2 p-1 bg-secondary/40 rounded-xl border border-border/50">
               <Button
                 type="button"
                 size="sm"
                 variant={brushMode === 'erase' ? 'default' : 'ghost'}
                 onClick={() => setBrushMode('erase')}
                 className={cn(
-                  "gap-1.5 text-xs h-8",
-                  brushMode === 'erase' && "bg-rose-600 hover:bg-rose-500 text-white shadow-sm"
+                  "gap-1.5 text-xs h-8 rounded-lg",
+                  brushMode === 'erase' && "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm"
                 )}
               >
-                <Eraser className="w-3.5 h-3.5" />
-                <span>Mode Hapus</span>
+                <Eraser className="w-3.5 h-3.5 shrink-0" />
+                <span>Hapus</span>
               </Button>
               <Button
                 type="button"
@@ -207,12 +207,12 @@ export default function EraserModal({
                 variant={brushMode === 'restore' ? 'default' : 'ghost'}
                 onClick={() => setBrushMode('restore')}
                 className={cn(
-                  "gap-1.5 text-xs h-8",
-                  brushMode === 'restore' && "bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm"
+                  "gap-1.5 text-xs h-8 rounded-lg transition-all",
+                  brushMode === 'restore' && "bg-white text-zinc-950 dark:bg-white dark:text-zinc-950 font-semibold shadow-sm"
                 )}
               >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>Mode Pulihkan</span>
+                <RotateCcw className="w-3.5 h-3.5 shrink-0" />
+                <span>Pulihkan</span>
               </Button>
             </div>
 
@@ -222,7 +222,7 @@ export default function EraserModal({
               size="sm"
               onClick={handleUndo}
               disabled={historyStack.length <= 1}
-              className="gap-1.5 text-xs h-8 text-muted-foreground hover:text-foreground"
+              className="gap-1.5 text-xs h-8 text-muted-foreground hover:text-foreground shrink-0 rounded-lg"
               title="Urungkan goresan terakhir"
             >
               <Undo2 className="w-3.5 h-3.5" />
@@ -231,7 +231,7 @@ export default function EraserModal({
           </div>
 
           {/* Canvas Area with Checkerboard Background */}
-          <div className="relative rounded-lg border border-border/80 overflow-hidden bg-zinc-950 flex items-center justify-center min-h-[300px] max-h-[420px]">
+          <div className="relative rounded-xl border border-border overflow-hidden bg-zinc-950 flex items-center justify-center min-h-[200px] sm:min-h-[300px] max-h-[300px] sm:max-h-[420px]">
             <div
               className="absolute inset-0 opacity-20"
               style={{
@@ -241,7 +241,7 @@ export default function EraserModal({
             />
             <canvas
               ref={canvasRef}
-              className="relative max-h-[380px] max-w-full object-contain cursor-crosshair drop-shadow-md"
+              className="relative max-h-[280px] sm:max-h-[380px] max-w-full object-contain cursor-crosshair drop-shadow-md"
               onPointerDown={handlePointerDown}
               onPointerMove={handlePointerMove}
               onPointerUp={handlePointerUp}
@@ -251,11 +251,11 @@ export default function EraserModal({
           </div>
 
           {/* Brush Sliders */}
-          <div className="grid grid-cols-2 gap-4 p-3.5 rounded-lg bg-secondary/20 border border-border/60">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-3.5 rounded-xl bg-secondary/30 border border-border">
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
                 <span className="text-muted-foreground">Ukuran Sikat</span>
-                <span className="text-amber-500 font-mono">{brushSize}px</span>
+                <span className="text-muted-foreground font-mono">{brushSize}px</span>
               </div>
               <input
                 type="range"
@@ -263,14 +263,14 @@ export default function EraserModal({
                 max="90"
                 value={brushSize}
                 onChange={(e) => setBrushSize(Number(e.target.value))}
-                className="w-full accent-amber-500 h-1.5 bg-muted rounded-lg appearance-none cursor-pointer"
+                className="w-full accent-white h-1.5 bg-secondary rounded-lg appearance-none cursor-pointer"
               />
             </div>
 
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
                 <span className="text-muted-foreground">Kehalusan Tepi (Blur)</span>
-                <span className="text-amber-500 font-mono">{brushBlur}px</span>
+                <span className="text-muted-foreground font-mono">{brushBlur}px</span>
               </div>
               <input
                 type="range"
@@ -278,29 +278,31 @@ export default function EraserModal({
                 max="15"
                 value={brushBlur}
                 onChange={(e) => setBrushBlur(Number(e.target.value))}
-                className="w-full accent-amber-500 h-1.5 bg-muted rounded-lg appearance-none cursor-pointer"
+                className="w-full accent-white h-1.5 bg-secondary rounded-lg appearance-none cursor-pointer"
               />
             </div>
           </div>
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border bg-card/50">
+        <div className="flex items-center justify-end gap-3 px-3 sm:px-6 py-3 sm:py-4 border-t border-border bg-secondary/20">
           <Button
             type="button"
             variant="outline"
             size="sm"
             onClick={onClose}
+            className="rounded-xl"
           >
             Batal
           </Button>
           <Button
             type="button"
+            variant="default"
             size="sm"
             onClick={handleSaveResult}
-            className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold gap-1.5 shadow-sm"
+            className="font-semibold gap-1.5 shadow-sm rounded-xl"
           >
-            <Check className="w-4 h-4" /> Gunakan Hasil
+            <Check className="w-4 h-4 shrink-0" /> Gunakan Hasil
           </Button>
         </div>
       </div>

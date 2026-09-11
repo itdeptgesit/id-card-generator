@@ -4,65 +4,67 @@
 
 @layer base {
   :root {
-    --background: 210 20% 98%;
-    --foreground: 222 47% 11%;
+    /* ChatGPT Light Mode */
+    --background: 0 0% 100%; /* #ffffff */
+    --foreground: 0 0% 9%; /* #171717 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card: 0 0% 100%; /* #ffffff */
+    --card-foreground: 0 0% 9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 0 0% 9%;
 
-    --primary: 38 92% 50%;
-    --primary-foreground: 48 96% 10%;
+    --primary: 0 0% 9%; /* #171717 crisp black button */
+    --primary-foreground: 0 0% 100%; /* #ffffff */
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 0 0% 95%; /* #f4f4f4 */
+    --secondary-foreground: 0 0% 9%;
 
-    --muted: 210 40% 94%;
-    --muted-foreground: 215 16% 45%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%; /* #737373 */
 
-    --accent: 210 40% 92%;
-    --accent-foreground: 222 47% 11%;
+    --accent: 0 0% 93%;
+    --accent-foreground: 0 0% 9%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 89%;
-    --input: 214.3 31.8% 89%;
-    --ring: 38 92% 50%;
+    --border: 0 0% 88%; /* #e0e0e0 */
+    --input: 0 0% 88%;
+    --ring: 0 0% 20%;
 
-    --radius: 0.625rem;
+    --radius: 0.75rem;
   }
 
   .dark {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
+    /* ChatGPT Dark Mode (Monochrome / Charcoal as shown in official UI) */
+    --background: 0 0% 8.5%; /* #161616 / #0d0d0d - Deep black ChatGPT canvas */
+    --foreground: 0 0% 94%; /* #f0f0f0 - Crisp text */
 
-    --card: 222 47% 9%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 13%; /* #212121 - ChatGPT modal and panel surface */
+    --card-foreground: 0 0% 94%;
 
-    --popover: 222 47% 9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 13%; /* #212121 */
+    --popover-foreground: 0 0% 94%;
 
-    --primary: 38 92% 50%;
-    --primary-foreground: 222 47% 6%;
+    --primary: 0 0% 98%; /* #fafafa - Iconic white button on dark surface */
+    --primary-foreground: 0 0% 9%; /* #171717 */
 
-    --secondary: 217 33% 15%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 0 0% 18.5%; /* #2f2f2f - ChatGPT inputs & secondary buttons */
+    --secondary-foreground: 0 0% 94%;
 
-    --muted: 217 33% 12%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 0 0% 16%; /* #292929 */
+    --muted-foreground: 0 0% 65%; /* #a6a6a6 - ChatGPT muted labels */
 
-    --accent: 217 33% 16%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 0 0% 21%; /* #353535 */
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 38 92% 50%;
+    --border: 0 0% 22%; /* #383838 / rgba(255,255,255,0.12) */
+    --input: 0 0% 22%;
+    --ring: 0 0% 80%;
   }
 }
 

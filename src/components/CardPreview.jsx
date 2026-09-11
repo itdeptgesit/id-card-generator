@@ -98,22 +98,23 @@ export default function CardPreview({
   };
 
   return (
-    <Card className="p-4 border-border/80 bg-card/95 shadow-md flex flex-col items-center w-full max-w-[420px]">
+    <Card className="p-3 sm:p-4 border-border bg-card shadow-sm rounded-2xl flex flex-col items-center w-full max-w-[420px]">
       {/* Header Info */}
-      <div className="w-full flex items-center justify-between pb-3 border-b border-border/70 mb-4">
+      <div className="w-full flex items-center justify-between pb-3 border-b border-border mb-3 sm:mb-4">
         <div className="flex items-center gap-2">
-          <Eye className="w-4 h-4 text-cyan-500" />
-          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-            Preview Kartu ({activeSide === 'front' ? 'Tampak Depan' : 'Tampak Belakang'})
+          <Eye className="w-4 h-4 text-zinc-400 shrink-0" />
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Preview ({activeSide === 'front' ? 'Depan' : 'Belakang'})
           </span>
         </div>
-        <Badge variant="outline" className="font-mono text-[10px] text-muted-foreground border-border">
+        <Badge variant="outline" className="font-mono text-[10px] text-muted-foreground border-border rounded-md">
           CR80 (54 x 85.6 mm)
         </Badge>
       </div>
 
       {/* Frame Kartu (Aspect Ratio CR80 ~ 340px x 538.5px) */}
-      <div className="card-stage-wrapper relative w-[340px] h-[538.5px] mx-auto overflow-hidden">
+      <div className="card-stage-outer w-full flex justify-center">
+        <div className="card-stage-wrapper relative w-[340px] h-[538.5px] mx-auto overflow-hidden">
         {/* ================= TAMPAK DEPAN ================= */}
         <div
           ref={cardRef}
@@ -306,10 +307,11 @@ export default function CardPreview({
           )}
         </div>
       </div>
+    </div>
 
       {/* Interactive Drag & Gesture Hint */}
-      <div className="flex items-center justify-center gap-2 mt-4 px-3 py-2 rounded-lg bg-secondary/50 border border-border text-xs text-muted-foreground text-center w-full max-w-[340px]">
-        <Move className="w-3.5 h-3.5 text-cyan-500 shrink-0" />
+      <div className="flex items-center justify-center gap-2 mt-3 sm:mt-4 px-3 py-2 rounded-xl bg-secondary/40 border border-border text-xs text-muted-foreground text-center w-full max-w-[340px]">
+        <Move className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
         <span>
           {activeSide === 'front'
             ? 'Seret foto langsung dengan mouse / layar sentuh. Scroll roda mouse untuk zoom.'

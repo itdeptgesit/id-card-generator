@@ -103,10 +103,10 @@ export default function PhotoControls({
   };
 
   return (
-    <Card className="border-border/80 bg-card/95 shadow-md">
+    <Card className="border-border bg-card shadow-sm rounded-2xl">
       <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-bold text-amber-500 uppercase tracking-wide">
-          <UploadCloud className="w-4 h-4 text-amber-500" />
+        <CardTitle className="text-sm font-semibold text-foreground uppercase tracking-wide flex items-center gap-2">
+          <UploadCloud className="w-4 h-4 text-zinc-400" />
           <span>Upload &amp; Pengaturan Foto Karyawan</span>
         </CardTitle>
       </CardHeader>
@@ -117,8 +117,8 @@ export default function PhotoControls({
           className={cn(
             'border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-1.5',
             isDraggingOver
-              ? 'border-amber-500 bg-amber-500/10'
-              : 'border-border bg-background/50 hover:border-amber-500/50 hover:bg-accent/40'
+              ? 'border-white/50 bg-secondary'
+              : 'border-border bg-secondary/30 hover:border-zinc-500 hover:bg-secondary/50'
           )}
           onClick={() => fileInputRef.current?.click()}
           onDragOver={handleDragOver}
@@ -132,7 +132,7 @@ export default function PhotoControls({
             className="hidden"
             onChange={handleInputChange}
           />
-          <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 mb-1">
+          <div className="w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center text-foreground mb-1">
             <UploadCloud className="w-5 h-5" />
           </div>
           <div className="text-xs font-semibold text-foreground">Klik atau Seret Foto ke Sini</div>
@@ -141,8 +141,8 @@ export default function PhotoControls({
 
         {/* HEIC Progress Banner */}
         {isConvertingHeic && (
-          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs animate-pulse">
-            <Loader2 className="w-4 h-4 spin-icon text-amber-400" />
+          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-secondary border border-border text-foreground text-xs animate-pulse">
+            <Loader2 className="w-4 h-4 spin-icon text-foreground" />
             <span>Sedang mengonversi format foto Apple HEIC/HEIF...</span>
           </div>
         )}
@@ -154,26 +154,28 @@ export default function PhotoControls({
             variant="outline"
             size="sm"
             onClick={rotate90}
-            className="text-xs gap-1.5 h-8 border-border hover:border-amber-500/50"
+            className="text-xs gap-1.5 h-8 border-border hover:bg-secondary rounded-xl"
             title="Putar 90 Derajat"
           >
-            <RotateCw className="w-3.5 h-3.5 text-amber-400" />
-            <span>Putar 90°</span>
+            <RotateCw className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+            <span className="hidden xs:inline sm:inline">Putar 90°</span>
+            <span className="xs:hidden sm:hidden">Putar</span>
           </Button>
 
           <Button
             type="button"
-            variant={photoConfig.flipH ? 'amber' : 'outline'}
+            variant={photoConfig.flipH ? 'default' : 'outline'}
             size="sm"
             onClick={toggleFlip}
             className={cn(
-              'text-xs gap-1.5 h-8 border-border',
-              !photoConfig.flipH && 'hover:border-cyan-500/50'
+              'text-xs gap-1.5 h-8 border-border rounded-xl transition-all',
+              photoConfig.flipH && 'bg-white text-zinc-950 dark:bg-white dark:text-zinc-950 font-semibold'
             )}
             title="Cermin / Balik Horizontal"
           >
-            <FlipHorizontal className={cn('w-3.5 h-3.5', photoConfig.flipH ? 'text-slate-950' : 'text-cyan-400')} />
-            <span>Cermin (Flip)</span>
+            <FlipHorizontal className={cn('w-3.5 h-3.5 shrink-0', photoConfig.flipH ? 'text-zinc-950' : 'text-muted-foreground')} />
+            <span className="hidden xs:inline sm:inline">Cermin (Flip)</span>
+            <span className="xs:hidden sm:hidden">Cermin</span>
           </Button>
 
           <Button
@@ -181,11 +183,12 @@ export default function PhotoControls({
             variant="outline"
             size="sm"
             onClick={centerPhoto}
-            className="text-xs gap-1.5 h-8 border-border hover:border-border/80"
+            className="text-xs gap-1.5 h-8 border-border hover:bg-secondary rounded-xl"
             title="Kembalikan ke Posisi Ideal"
           >
-            <Maximize2 className="w-3.5 h-3.5 text-slate-300" />
-            <span>Ke Tengah</span>
+            <Maximize2 className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+            <span className="hidden xs:inline sm:inline">Ke Tengah</span>
+            <span className="xs:hidden sm:hidden">Tengah</span>
           </Button>
         </div>
 
@@ -193,8 +196,8 @@ export default function PhotoControls({
         <div className="space-y-3 pt-1">
           <div className="space-y-1.5">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-semibold text-foreground/90">Zoom Ukuran Foto</span>
-              <span className="font-mono text-amber-400 font-semibold">{Math.round(photoConfig.zoom)}%</span>
+              <span className="font-medium text-foreground/90">Zoom Ukuran Foto</span>
+              <span className="font-mono text-muted-foreground font-medium">{Math.round(photoConfig.zoom)}%</span>
             </div>
             <input
               type="range"
@@ -202,15 +205,15 @@ export default function PhotoControls({
               max="300"
               value={photoConfig.zoom}
               onChange={(e) => onPhotoChange({ zoom: Number(e.target.value) })}
-              className="w-full accent-amber-500 cursor-pointer h-1.5 bg-muted rounded-lg appearance-none"
+              className="w-full accent-white cursor-pointer h-1.5 bg-secondary rounded-lg appearance-none"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <div className="flex justify-between items-center text-xs">
-                <span className="font-semibold text-foreground/90">Geser X</span>
-                <span className="font-mono text-amber-400 font-semibold">{photoConfig.posX}px</span>
+                <span className="font-medium text-foreground/90">Geser X</span>
+                <span className="font-mono text-muted-foreground font-medium">{photoConfig.posX}px</span>
               </div>
               <input
                 type="range"
@@ -218,14 +221,14 @@ export default function PhotoControls({
                 max="350"
                 value={photoConfig.posX}
                 onChange={(e) => onPhotoChange({ posX: Number(e.target.value) })}
-                className="w-full accent-amber-500 cursor-pointer h-1.5 bg-muted rounded-lg appearance-none"
+                className="w-full accent-white cursor-pointer h-1.5 bg-secondary rounded-lg appearance-none"
               />
             </div>
 
             <div className="space-y-1.5">
               <div className="flex justify-between items-center text-xs">
-                <span className="font-semibold text-foreground/90">Geser Y</span>
-                <span className="font-mono text-amber-400 font-semibold">{photoConfig.posY}px</span>
+                <span className="font-medium text-foreground/90">Geser Y</span>
+                <span className="font-mono text-muted-foreground font-medium">{photoConfig.posY}px</span>
               </div>
               <input
                 type="range"
@@ -233,15 +236,15 @@ export default function PhotoControls({
                 max="350"
                 value={photoConfig.posY}
                 onChange={(e) => onPhotoChange({ posY: Number(e.target.value) })}
-                className="w-full accent-amber-500 cursor-pointer h-1.5 bg-muted rounded-lg appearance-none"
+                className="w-full accent-white cursor-pointer h-1.5 bg-secondary rounded-lg appearance-none"
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-semibold text-foreground/90">Rotasi Sudut Bebas</span>
-              <span className="font-mono text-amber-400 font-semibold">{photoConfig.rotation}°</span>
+              <span className="font-medium text-foreground/90">Rotasi Sudut Bebas</span>
+              <span className="font-mono text-muted-foreground font-medium">{photoConfig.rotation}°</span>
             </div>
             <input
               type="range"
@@ -249,7 +252,7 @@ export default function PhotoControls({
               max="180"
               value={photoConfig.rotation}
               onChange={(e) => onPhotoChange({ rotation: Number(e.target.value) })}
-              className="w-full accent-amber-500 cursor-pointer h-1.5 bg-muted rounded-lg appearance-none"
+              className="w-full accent-white cursor-pointer h-1.5 bg-secondary rounded-lg appearance-none"
             />
           </div>
         </div>
@@ -257,13 +260,13 @@ export default function PhotoControls({
         <Separator className="bg-border/60" />
 
         {/* Color Tuning: Brightness & Contrast */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="space-y-1.5">
             <div className="flex justify-between items-center text-xs">
-              <span className="flex items-center gap-1 font-semibold text-foreground/90">
-                <Sun className="w-3.5 h-3.5 text-amber-400" /> Kecerahan
+              <span className="flex items-center gap-1 font-medium text-foreground/90">
+                <Sun className="w-3.5 h-3.5 text-zinc-400" /> Kecerahan
               </span>
-              <span className="font-mono text-amber-400 font-semibold">{photoConfig.brightness}%</span>
+              <span className="font-mono text-muted-foreground font-medium">{photoConfig.brightness}%</span>
             </div>
             <input
               type="range"
@@ -271,16 +274,16 @@ export default function PhotoControls({
               max="150"
               value={photoConfig.brightness}
               onChange={(e) => onPhotoChange({ brightness: Number(e.target.value) })}
-              className="w-full accent-amber-500 cursor-pointer h-1.5 bg-muted rounded-lg appearance-none"
+              className="w-full accent-white cursor-pointer h-1.5 bg-secondary rounded-lg appearance-none"
             />
           </div>
 
           <div className="space-y-1.5">
             <div className="flex justify-between items-center text-xs">
-              <span className="flex items-center gap-1 font-semibold text-foreground/90">
-                <Contrast className="w-3.5 h-3.5 text-cyan-400" /> Kontras
+              <span className="flex items-center gap-1 font-medium text-foreground/90">
+                <Contrast className="w-3.5 h-3.5 text-zinc-400" /> Kontras
               </span>
-              <span className="font-mono text-cyan-400 font-semibold">{photoConfig.contrast}%</span>
+              <span className="font-mono text-muted-foreground font-medium">{photoConfig.contrast}%</span>
             </div>
             <input
               type="range"
@@ -288,7 +291,7 @@ export default function PhotoControls({
               max="150"
               value={photoConfig.contrast}
               onChange={(e) => onPhotoChange({ contrast: Number(e.target.value) })}
-              className="w-full accent-cyan-500 cursor-pointer h-1.5 bg-muted rounded-lg appearance-none"
+              className="w-full accent-white cursor-pointer h-1.5 bg-secondary rounded-lg appearance-none"
             />
           </div>
         </div>

@@ -7,21 +7,22 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm',
+        default:
+          'bg-white text-zinc-950 hover:bg-zinc-200 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 font-semibold shadow-sm',
         destructive:
-          'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm',
+          'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm font-medium',
         outline:
-          'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+          'border border-border bg-transparent hover:bg-secondary text-foreground font-medium',
         secondary:
-          'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
+          'bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium',
+        ghost: 'hover:bg-secondary text-muted-foreground hover:text-foreground font-medium',
+        link: 'text-foreground underline-offset-4 hover:underline',
         amber:
-          'bg-amber-500 text-slate-950 font-bold hover:bg-amber-400 shadow-sm shadow-amber-500/20',
+          'bg-white text-zinc-950 hover:bg-zinc-200 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 font-semibold shadow-sm',
         emerald:
-          'bg-emerald-600 text-white font-bold hover:bg-emerald-500 shadow-sm shadow-emerald-600/20',
+          'bg-white text-zinc-950 hover:bg-zinc-200 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 font-semibold shadow-sm',
         cyan:
-          'bg-cyan-600 text-white font-semibold hover:bg-cyan-500 shadow-sm shadow-cyan-600/20',
+          'bg-white text-zinc-950 hover:bg-zinc-200 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 font-semibold shadow-sm',
       },
       size: {
         default: 'h-9 px-4 py-2 text-xs md:text-sm',
