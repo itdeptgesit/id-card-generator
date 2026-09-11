@@ -20,6 +20,7 @@ export default function BackgroundTools({
   const [aiState, setAiState] = useState('idle'); // idle | loading | done | error
   const [aiProgress, setAiProgress] = useState(0);
   const [aiStage, setAiStage] = useState('');
+  const [aiErrorMsg, setAiErrorMsg] = useState('');
   const [tolerance, setTolerance] = useState(40);
   const bgInputRef = useRef(null);
 
@@ -35,8 +36,8 @@ export default function BackgroundTools({
 
       const resultDataUrl = await segmentPortraitAI(src, (progress) => {
         setAiProgress(Math.round(progress * 100));
-        if (progress < 0.3) setAiStage('Memuat model AI...');
-        else if (progress < 0.7) setAiStage('Menganalisis foto...');
+        if (progress < 0.3) setAiStage('Memuat model AI (pertama kali ~5MB)...');
+        else if (progress < 0.7) setAiStage('Menganalisis & memotong foto...');
         else setAiStage('Memfinalisasi hasil...');
       });
 
@@ -45,8 +46,9 @@ export default function BackgroundTools({
       setTimeout(() => setAiState('idle'), 3000);
     } catch (err) {
       console.error('AI removal error:', err);
+      setAiErrorMsg(err?.message || 'Gagal memproses. Pastikan ada koneksi internet.');
       setAiState('error');
-      setTimeout(() => setAiState('idle'), 4000);
+      setTimeout(() => { setAiState('idle'); setAiErrorMsg(''); }, 5000);
     }
   };
 

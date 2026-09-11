@@ -1,5 +1,5 @@
 /**
- * AI Background Removal menggunakan @imgly/background-removal
+ * AI Background Removal menggunakan @imgly/background-removal v1.7+
  * ─ 100% gratis, tidak perlu API key
  * ─ AI model ONNX berjalan langsung di browser (WebAssembly)
  * ─ Tidak ada limit penggunaan
@@ -9,7 +9,6 @@ let removeBackgroundFn = null;
 
 async function getRemoveBackground() {
   if (removeBackgroundFn) return removeBackgroundFn;
-  // Lazy-load agar tidak memperlambat inisialisasi app
   const mod = await import('@imgly/background-removal');
   removeBackgroundFn = mod.removeBackground;
   return removeBackgroundFn;
@@ -30,15 +29,19 @@ export async function segmentPortraitAI(imgSrc, onProgress) {
     const res = await fetch(imgSrc);
     blob = await res.blob();
   } else {
-    const res = await fetch(imgSrc, { mode: 'cors' });
-    blob = await res.blob();
+    try {
+      const res = await fetch(imgSrc, { mode: 'cors' });
+      blob = await res.blob();
+    } catch {
+      // fallback: ambil via data URL jika CORS error
+      throw new Error('Gagal mengambil foto. Pastikan foto sudah diupload.');
+    }
   }
 
   const resultBlob = await removeBackground(blob, {
-    publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/dist/',
-    // Model medium: keseimbangan kecepatan & kualitas
-    model: 'medium',
-    // Output format PNG dengan alpha channel
+    // Biarkan library pakai CDN default sesuai versi yang terinstall
+    // JANGAN hardcode URL agar tidak mismatch versi
+    model: 'small', // 'small' lebih cepat, 'medium' lebih presisi
     output: {
       format: 'image/png',
       quality: 1.0,

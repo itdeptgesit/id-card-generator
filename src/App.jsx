@@ -7,6 +7,7 @@ import BackgroundTools from './components/BackgroundTools';
 import BatchPrintManager from './components/BatchPrintManager';
 import EraserModal from './components/EraserModal';
 import ExportBar from './components/ExportBar';
+import PoseFlowAI from './components/PoseFlowAI';
 import './App.css';
 
 const DEFAULT_PHOTO = '/assets/default_model.png';
@@ -38,9 +39,10 @@ export default function App() {
 
   const [activeSide, setActiveSide] = useState('front'); // 'front' | 'back'
   const [isGridVisible, setIsGridVisible] = useState(true);
-  const [companyTemplate, setCompanyTemplate] = useState('gesit'); // default: 'gesit' | 'gnr'
+  const [companyTemplate, setCompanyTemplate] = useState('gesit'); // 'gesit' | 'gnr'
+  const [activePage, setActivePage] = useState('idcard'); // 'idcard' | 'poseflow'
 
-  // Data Identitas Kartu (Nama & Divisi, Tanpa NIK)
+  // Data Identitas Kartu
   const [cardData, setCardData] = useState({
     name: 'NAMA LENGKAP',
     department: 'DIVISI',
@@ -74,34 +76,23 @@ export default function App() {
   // Antrean 10 Kartu Lembar A4
   const [batchList, setBatchList] = useState([]);
 
-  // Handler update konfigurasi foto
   const handlePhotoChange = (updates) => {
     setPhotoConfig((prev) => ({ ...prev, ...updates }));
   };
 
-  // Handler foto baru diunggah
   const handleNewPhotoUploaded = (newSrc) => {
     setOriginalPhotoSrc(newSrc);
-    setPhotoConfig({
-      src: newSrc,
-      ...DEFAULT_PHOTO_PRESET,
-    });
+    setPhotoConfig({ src: newSrc, ...DEFAULT_PHOTO_PRESET });
   };
 
-  // Handler hasil olahan foto (AI / color remover / eraser)
   const handlePhotoProcessed = (processedDataUrl) => {
     setPhotoConfig((prev) => ({ ...prev, src: processedDataUrl }));
   };
 
-  // Reset konfigurasi posisi & filter foto
   const handleResetPhoto = () => {
-    setPhotoConfig({
-      src: originalPhotoSrc,
-      ...DEFAULT_PHOTO_PRESET,
-    });
+    setPhotoConfig({ src: originalPhotoSrc, ...DEFAULT_PHOTO_PRESET });
   };
 
-  // Reset formulir & foto saat tombol "Save & Next" ditekan
   const handleResetForNextCard = () => {
     setCardData({
       name: 'NAMA LENGKAP',
@@ -112,16 +103,13 @@ export default function App() {
       deptColor: '#BE913B',
       textAlign: 'left',
     });
-    setPhotoConfig({
-      src: DEFAULT_PHOTO,
-      ...DEFAULT_PHOTO_PRESET,
-    });
+    setPhotoConfig({ src: DEFAULT_PHOTO, ...DEFAULT_PHOTO_PRESET });
     setOriginalPhotoSrc(DEFAULT_PHOTO);
   };
 
   return (
     <div className="min-h-screen">
-      {/* Header Aplikasi */}
+      {/* Header */}
       <Header
         isGridVisible={isGridVisible}
         toggleGrid={() => setIsGridVisible((prev) => !prev)}
@@ -131,8 +119,14 @@ export default function App() {
         setCompanyTemplate={setCompanyTemplate}
         theme={theme}
         toggleTheme={toggleTheme}
+        activePage={activePage}
+        setActivePage={setActivePage}
       />
 
+      {activePage === 'poseflow' ? (
+        <PoseFlowAI />
+      ) : (
+      <>
       {/* Main Grid Layout */}
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 items-start">
         {/* Kolom Kiri: Formulir & Kontrol Editing */}
@@ -177,7 +171,7 @@ export default function App() {
         </div>
       </main>
 
-      {/* Antrean & Cetak Lembar A4 (10 ID Card) */}
+      {/* Antrean & Cetak Lembar A4 */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 mt-4 sm:mt-6">
         <BatchPrintManager
           frontRef={frontCardRef}
@@ -190,7 +184,7 @@ export default function App() {
         />
       </div>
 
-      {/* Bar Ekspor Tunggal (PNG HD, PDF Kartu CR80, Cetak Cepat) */}
+      {/* Bar Ekspor Tunggal */}
       <ExportBar
         frontRef={frontCardRef}
         backRef={backCardRef}
@@ -198,11 +192,11 @@ export default function App() {
         personName={cardData.name}
       />
 
-      {/* Footer Aplikasi */}
+      {/* Footer */}
       <footer className="mt-8 sm:mt-12 py-4 sm:py-6 px-3 sm:px-4 border-t border-border/60 bg-card/50 backdrop-blur-sm text-center">
         <div className="max-w-7xl mx-auto flex flex-col gap-1 items-center">
           <p className="text-xs sm:text-sm font-medium text-muted-foreground">
-            Copyright © {new Date().getFullYear()} <strong className="text-zinc-200 font-semibold">IT Gesit</strong> • Developed by <strong className="text-zinc-200 font-semibold">Mr Siarudin</strong>
+            Copyright © {new Date().getFullYear()} <strong className="text-foreground font-semibold">IT Gesit</strong> • Developed by <strong className="text-foreground font-semibold">Mr Siarudin</strong>
           </p>
           <p className="text-[10px] sm:text-xs text-muted-foreground/60">
             The Gesit Companies • ID Card Studio Pro
@@ -210,7 +204,6 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Modal Sikat Manual (Eraser & Restore) */}
       <EraserModal
         isOpen={isEraserOpen}
         onClose={() => setIsEraserOpen(false)}
@@ -218,6 +211,8 @@ export default function App() {
         originalPhotoSrc={originalPhotoSrc}
         onSave={handlePhotoProcessed}
       />
+      </>
+      )}
     </div>
   );
 }
