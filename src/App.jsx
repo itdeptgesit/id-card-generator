@@ -7,10 +7,7 @@ import BackgroundTools from './components/BackgroundTools';
 import BatchPrintManager from './components/BatchPrintManager';
 import EraserModal from './components/EraserModal';
 import ExportBar from './components/ExportBar';
-import PoseFlowAI from './components/PoseFlowAI';
 import './App.css';
-
-const DEFAULT_PHOTO = '/assets/default_model.png';
 
 export default function App() {
   const frontCardRef = useRef(null);
@@ -40,7 +37,6 @@ export default function App() {
   const [activeSide, setActiveSide] = useState('front'); // 'front' | 'back'
   const [isGridVisible, setIsGridVisible] = useState(true);
   const [companyTemplate, setCompanyTemplate] = useState('gesit'); // 'gesit' | 'gnr'
-  const [activePage, setActivePage] = useState('idcard'); // 'idcard' | 'poseflow'
 
   // Data Identitas Kartu
   const [cardData, setCardData] = useState({
@@ -54,22 +50,31 @@ export default function App() {
   });
 
   // Konfigurasi Transformasi & Filter Foto
-  const DEFAULT_PHOTO_PRESET = {
-    zoom: 22,
-    posX: 22,
-    posY: 50,
-    rotation: 0,
-    flipH: false,
-    brightness: 100,
-    contrast: 100,
-  };
+const DEFAULT_PHOTO_PRESET = {
+  zoom: 22,
+  posX: 22,
+  posY: 50,
+  rotation: 0,
+  flipH: false,
+  brightness: 100,
+  contrast: 100,
+};
+
+const TEMPLATE_DEFAULTS = {
+  gesit: { src: '/assets/model-woman.png', preset: { ...DEFAULT_PHOTO_PRESET, zoom: 42 } },
+  gnr: { src: '/assets/model-man.png', preset: { ...DEFAULT_PHOTO_PRESET, zoom: 40 } },
+};
+
+const getTemplateState = (tpl) => TEMPLATE_DEFAULTS[tpl] || TEMPLATE_DEFAULTS.gesit;
+
+const initialTemplate = getTemplateState('gesit');
 
   const [photoConfig, setPhotoConfig] = useState({
-    src: DEFAULT_PHOTO,
-    ...DEFAULT_PHOTO_PRESET,
+    src: initialTemplate.src,
+    ...initialTemplate.preset,
   });
 
-  const [originalPhotoSrc, setOriginalPhotoSrc] = useState(DEFAULT_PHOTO);
+  const [originalPhotoSrc, setOriginalPhotoSrc] = useState(initialTemplate.src);
   const [customBgUrl, setCustomBgUrl] = useState(null);
   const [isEraserOpen, setIsEraserOpen] = useState(false);
 
@@ -103,30 +108,28 @@ export default function App() {
       deptColor: '#BE913B',
       textAlign: 'left',
     });
-    setPhotoConfig({ src: DEFAULT_PHOTO, ...DEFAULT_PHOTO_PRESET });
-    setOriginalPhotoSrc(DEFAULT_PHOTO);
+    const t = getTemplateState(companyTemplate);
+    setPhotoConfig({ src: t.src, ...t.preset });
+    setOriginalPhotoSrc(t.src);
+  };
+
+  const handleCompanyTemplateChange = (next) => {
+    const t = getTemplateState(next);
+    setCompanyTemplate(next);
+    setOriginalPhotoSrc(t.src);
+    setPhotoConfig({ src: t.src, ...t.preset });
   };
 
   return (
     <div className="min-h-screen">
       {/* Header */}
       <Header
-        isGridVisible={isGridVisible}
-        toggleGrid={() => setIsGridVisible((prev) => !prev)}
-        activeSide={activeSide}
-        setActiveSide={setActiveSide}
         companyTemplate={companyTemplate}
-        setCompanyTemplate={setCompanyTemplate}
+        setCompanyTemplate={handleCompanyTemplateChange}
         theme={theme}
         toggleTheme={toggleTheme}
-        activePage={activePage}
-        setActivePage={setActivePage}
       />
 
-      {activePage === 'poseflow' ? (
-        <PoseFlowAI />
-      ) : (
-      <>
       {/* Main Grid Layout */}
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 items-start">
         {/* Kolom Kiri: Formulir & Kontrol Editing */}
@@ -135,7 +138,7 @@ export default function App() {
             cardData={cardData}
             onChange={setCardData}
             companyTemplate={companyTemplate}
-            onCompanyTemplateChange={setCompanyTemplate}
+            onCompanyTemplateChange={handleCompanyTemplateChange}
           />
 
           <PhotoControls
@@ -143,6 +146,7 @@ export default function App() {
             onPhotoChange={handlePhotoChange}
             onNewPhotoUploaded={handleNewPhotoUploaded}
             onResetPhoto={handleResetPhoto}
+            originalPhotoSrc={originalPhotoSrc}
           />
 
           <BackgroundTools
@@ -161,10 +165,12 @@ export default function App() {
             cardRef={frontCardRef}
             backCardRef={backCardRef}
             activeSide={activeSide}
+            setActiveSide={setActiveSide}
             cardData={cardData}
             photoConfig={photoConfig}
             onPhotoChange={handlePhotoChange}
             isGridVisible={isGridVisible}
+            toggleGrid={() => setIsGridVisible((prev) => !prev)}
             customBgUrl={customBgUrl}
             companyTemplate={companyTemplate}
           />
@@ -211,8 +217,6 @@ export default function App() {
         originalPhotoSrc={originalPhotoSrc}
         onSave={handlePhotoProcessed}
       />
-      </>
-      )}
     </div>
   );
 }

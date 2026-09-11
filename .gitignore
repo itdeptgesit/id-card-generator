@@ -25,3 +25,7 @@ dist-ssr
 
 # Temp media & scratchpad
 .tempmediaStorage
+
+# Environment variables
+.env
+.env.local

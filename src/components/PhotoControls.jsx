@@ -20,6 +20,7 @@ export default function PhotoControls({
   onPhotoChange,
   onNewPhotoUploaded,
   onResetPhoto,
+  originalPhotoSrc,
 }) {
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const [isConvertingHeic, setIsConvertingHeic] = useState(false);
@@ -115,10 +116,11 @@ export default function PhotoControls({
         {/* Drag & Drop Upload Zone */}
         <div
           className={cn(
-            'border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-1.5',
+            'border-2 border-dashed rounded-xl text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-1.5 overflow-hidden',
             isDraggingOver
               ? 'border-white/50 bg-secondary'
-              : 'border-border bg-secondary/30 hover:border-zinc-500 hover:bg-secondary/50'
+              : 'border-border bg-secondary/30 hover:border-zinc-500 hover:bg-secondary/50',
+            originalPhotoSrc && originalPhotoSrc !== '/assets/default_model.png' ? 'p-2 aspect-video' : 'p-5'
           )}
           onClick={() => fileInputRef.current?.click()}
           onDragOver={handleDragOver}
@@ -132,11 +134,28 @@ export default function PhotoControls({
             className="hidden"
             onChange={handleInputChange}
           />
-          <div className="w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center text-foreground mb-1">
-            <UploadCloud className="w-5 h-5" />
-          </div>
-          <div className="text-xs font-semibold text-foreground">Klik atau Seret Foto ke Sini</div>
-          <div className="text-[11px] text-muted-foreground">Mendukung JPG, PNG, WEBP &amp; HEIC (iPhone)</div>
+          {originalPhotoSrc && originalPhotoSrc !== '/assets/default_model.png' ? (
+            <>
+              <div className="relative w-full h-full group">
+                <img
+                  src={originalPhotoSrc}
+                  alt="Foto yang diunggah"
+                  className="w-full h-full object-contain rounded-lg"
+                />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
+                  <span className="text-xs font-semibold text-white bg-black/60 px-3 py-1.5 rounded-lg backdrop-blur-sm">Ganti Foto</span>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center text-foreground mb-1">
+                <UploadCloud className="w-5 h-5" />
+              </div>
+              <div className="text-xs font-semibold text-foreground">Klik atau Seret Foto ke Sini</div>
+              <div className="text-[11px] text-muted-foreground">Mendukung JPG, PNG, WEBP &amp; HEIC (iPhone)</div>
+            </>
+          )}
         </div>
 
         {/* HEIC Progress Banner */}

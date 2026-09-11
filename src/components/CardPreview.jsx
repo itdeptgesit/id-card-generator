@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { Eye, Move } from 'lucide-react';
+import { Eye, Move, FlipHorizontal, Grid3X3 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -8,10 +8,12 @@ export default function CardPreview({
   cardRef,
   backCardRef,
   activeSide,
+  setActiveSide,
   cardData,
   photoConfig,
   onPhotoChange,
   isGridVisible,
+  toggleGrid,
   customBgUrl,
   companyTemplate = 'gesit',
 }) {
@@ -317,6 +319,54 @@ export default function CardPreview({
             ? 'Seret foto langsung dengan mouse / layar sentuh. Scroll roda mouse untuk zoom.'
             : 'Tampak belakang resmi: Vision, Mission, Values, & Perhatian.'}
         </span>
+      </div>
+
+      {/* Front / Back Switcher + Grid Toggle */}
+      <div className="mt-3 w-full max-w-[340px]">
+        <div className="flex items-center gap-1.5">
+          <div className="flex flex-1 items-center justify-between gap-1.5 p-1 rounded-xl bg-secondary/40 border border-border">
+            <button
+              type="button"
+              onClick={() => setActiveSide('front')}
+              className={cn(
+                'flex-1 flex items-center justify-center gap-2 h-8 rounded-lg text-[11px] font-bold uppercase tracking-[0.12em] transition-all duration-150',
+                activeSide === 'front'
+                  ? 'bg-foreground text-background shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
+              )}
+            >
+              <FlipHorizontal className="w-3.5 h-3.5" strokeWidth={2.25} />
+              Front
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveSide('back')}
+              className={cn(
+                'flex-1 flex items-center justify-center gap-2 h-8 rounded-lg text-[11px] font-bold uppercase tracking-[0.12em] transition-all duration-150',
+                activeSide === 'back'
+                  ? 'bg-foreground text-background shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
+              )}
+            >
+              <FlipHorizontal className="w-3.5 h-3.5 rotate-180" strokeWidth={2.25} />
+              Back
+            </button>
+          </div>
+
+          <button
+            type="button"
+            onClick={toggleGrid}
+            title="Tampilkan / sembunyikan panduan grid"
+            className={cn(
+              'inline-flex h-10 w-11 shrink-0 items-center justify-center rounded-xl border text-muted-foreground transition-all duration-150',
+              isGridVisible
+                ? 'border-border bg-secondary/60 text-foreground'
+                : 'border-border/70 bg-card hover:bg-muted/50 hover:text-foreground'
+            )}
+          >
+            <Grid3X3 className="w-4 h-4" strokeWidth={2} />
+          </button>
+        </div>
       </div>
     </Card>
   );
